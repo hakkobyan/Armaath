@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "Armath Tbilisi",
+    "slug": "armath-tbilisi-app",
+    "scheme": "armath",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "web": {
+      "output": "single",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "@react-native-community/datetimepicker"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "ge.armath.tbilisi"
+    },
+    "android": {
+      "package": "ge.armath.tbilisi"
+    }
+  }
+}

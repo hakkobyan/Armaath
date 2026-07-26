@@ -1,0 +1,1 @@
+import{useQuery}from'@tanstack/react-query';import{getGroups}from'@/services/groups.service';import{useAuth}from'./useAuth';export function useCurrentGroup(){const{profile}=useAuth();return useQuery({queryKey:[profile?.role==='teacher'?'teacher-groups':'student-groups',profile?.id],queryFn:()=>getGroups(profile!.id,profile!.role),enabled:!!profile})}

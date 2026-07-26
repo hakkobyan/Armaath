@@ -1,0 +1,1 @@
+import{useQuery}from'@tanstack/react-query';import{getProfile}from'@/services/profile.service';export const useProfile=(id?:string)=>useQuery({queryKey:['profile',id],queryFn:()=>getProfile(id!),enabled:!!id});

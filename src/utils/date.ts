@@ -1,0 +1,1 @@
+export const formatDate=(iso:string)=>new Intl.DateTimeFormat(undefined,{weekday:'short',month:'short',day:'numeric'}).format(new Date(iso));export const formatTime=(iso:string)=>new Intl.DateTimeFormat(undefined,{hour:'numeric',minute:'2-digit'}).format(new Date(iso));

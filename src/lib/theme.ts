@@ -1,0 +1,1 @@
+export const colors={ink:'#172033',muted:'#667085',background:'#F4F6FB',surface:'#FFFFFF',primary:'#6757E8',primaryDark:'#4B3BC4',primarySoft:'#EFECFF',mint:'#31B99A',mintSoft:'#E8F8F3',coral:'#F07863',coralSoft:'#FFF0ED',border:'#E4E7EC',danger:'#C83D55'}as const;

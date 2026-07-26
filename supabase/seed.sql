@@ -1,0 +1,7 @@
+-- First create these users in Authentication > Users, then replace all three UUID placeholders below.
+-- teacher@armath-tbilisi.test, student1@armath-tbilisi.test, student2@armath-tbilisi.test
+do $$declare teacher uuid:='00000000-0000-0000-0000-000000000001';student1 uuid:='00000000-0000-0000-0000-000000000002';student2 uuid:='00000000-0000-0000-0000-000000000003';gid uuid:=gen_random_uuid();rid uuid:=gen_random_uuid();begin
+update public.profiles set first_name='Nino',last_name='Teacher',role='teacher' where id=teacher;update public.profiles set first_name='Arman',last_name='Student',role='student' where id=student1;update public.profiles set first_name='Mariam',last_name='Student',role='student' where id=student2;
+insert into public.groups(id,name,description,teacher_id)values(gid,'Robotics Junior','Build and program robots.',teacher);insert into public.group_members(group_id,student_id)values(gid,student1),(gid,student2);
+insert into public.schedule_items(group_id,teacher_id,title,room,starts_at,ends_at,status)values(gid,teacher,'Robot sensors','Room 2',now()+interval '2 days',now()+interval '2 days 90 minutes','scheduled'),(gid,teacher,'Motor control','Lab 1',now()+interval '9 days',now()+interval '9 days 90 minutes','scheduled');
+insert into public.chat_rooms(id,group_id,name,created_by)values(rid,gid,'Robotics Junior',teacher);insert into public.messages(chat_room_id,sender_id,content)values(rid,teacher,'Welcome to the group chat!'),(rid,student1,'Thank you!');end$$;

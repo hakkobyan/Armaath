@@ -1,0 +1,4 @@
+import { supabase } from '@/lib/supabase';import type{ScheduleItem}from'@/types/models';
+export async function getSchedule(groupIds:string[]){if(!groupIds.length)return[];const{data,error}=await supabase.from('schedule_items').select('*, groups(name), profiles!schedule_items_teacher_id_fkey(first_name,last_name)').in('group_id',groupIds).order('starts_at');if(error)throw error;return data as ScheduleItem[]}
+export async function saveSchedule(item:Partial<ScheduleItem>&Pick<ScheduleItem,'group_id'|'teacher_id'|'title'|'starts_at'|'ends_at'|'status'>){const{data,error}=item.id?await supabase.from('schedule_items').update(item).eq('id',item.id).select().single():await supabase.from('schedule_items').insert(item).select().single();if(error)throw error;return data}
+export async function removeSchedule(id:string){const{error}=await supabase.from('schedule_items').delete().eq('id',id);if(error)throw error}

@@ -1,0 +1,1 @@
+import {ActivityIndicator,StyleSheet,Text,View}from'react-native';export function LoadingScreen(){return <View style={styles.root}><ActivityIndicator size="large" color="#5b4cf0"/><Text>Loading Armath…</Text></View>}const styles=StyleSheet.create({root:{flex:1,alignItems:'center',justifyContent:'center',gap:12,backgroundColor:'#f7f7fb'}});

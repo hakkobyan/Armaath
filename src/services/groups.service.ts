@@ -1,0 +1,8 @@
+import { supabase } from '@/lib/supabase';
+import type { Group,GroupMemberWithProfile,Profile } from '@/types/models';
+export async function getGroups(userId:string,role:'student'|'teacher'){let q=supabase.from('groups').select('*').order('name');if(role==='teacher')q=q.eq('teacher_id',userId);else q=q.in('id',(await supabase.from('group_members').select('group_id').eq('student_id',userId)).data?.map(x=>x.group_id)??[]);const{data,error}=await q;if(error)throw error;return data as Group[]}
+export async function countStudents(groupIds:string[]){if(!groupIds.length)return 0;const{count,error}=await supabase.from('group_members').select('*',{count:'exact',head:true}).in('group_id',groupIds);if(error)throw error;return count??0}
+export async function getAllStudents(){const{data,error}=await supabase.from('profiles').select('*').eq('role','student').order('first_name').order('last_name');if(error)throw error;return data as Profile[]}
+export async function getGroupMembers(groupIds:string[]){if(!groupIds.length)return[];const{data,error}=await supabase.from('group_members').select('*, profiles!group_members_student_id_fkey(id,first_name,last_name)').in('group_id',groupIds);if(error)throw error;return data as GroupMemberWithProfile[]}
+export async function saveTeacherGroup(input:{id?:string;name:string;description:string;studentIds:string[]}){const{data,error}=await supabase.rpc('save_teacher_group',{target_group_id:input.id??null,group_name:input.name.trim(),group_description:input.description.trim()||null,student_ids:input.studentIds});if(error)throw error;return data as string}
+export async function deleteTeacherGroup(id:string){const{error}=await supabase.from('groups').delete().eq('id',id);if(error)throw error}
