@@ -1,7 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useMemo, useState } from "react";
-import { Alert, Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  Modal,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/Button";
@@ -22,6 +31,8 @@ import { groupSchema } from "@/utils/validation";
 type GroupForm = z.infer<typeof groupSchema>;
 
 export function GroupsScreen() {
+  const { width } = useWindowDimensions();
+  const desktop = width >= 900;
   const groups = useCurrentGroup();
   const groupIds = groups.data?.map((group) => group.id) ?? [];
   const students = useQuery({
@@ -98,32 +109,42 @@ export function GroupsScreen() {
     mutationFn: deleteTeacherGroup,
     onSuccess: invalidate,
   });
-  const confirmDelete = (group: Group) =>
-    Alert.alert(
-      "Delete group",
-      `Delete ${group.name}? Its schedule and chat history will also be removed.`,
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: () => remove.mutate(group.id),
-        },
-      ],
-    );
+  const confirmDelete = (group: Group) => {
+    const message = `Delete ${group.name}? Its schedule and chat history will also be removed.`;
+    if (Platform.OS === "web") {
+      if (window.confirm(message)) remove.mutate(group.id);
+      return;
+    }
+    Alert.alert("Delete group", message, [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: () => remove.mutate(group.id),
+      },
+    ]);
+  };
 
   return (
     <ScreenContainer>
       <View style={styles.header}>
         <View>
           <Text style={styles.kicker}>TEACHER SPACE</Text>
-          <Text style={styles.title}>Groups</Text>
+          <Text style={[styles.title, desktop && styles.titleDesktop]}>
+            Groups
+          </Text>
         </View>
         <Button title="New group" onPress={() => open()} />
       </View>
       {groups.isError || students.isError || members.isError ? (
         <Text style={styles.error}>
           Group data could not be loaded. Apply migration 003 and try again.
+        </Text>
+      ) : null}
+      {remove.isError ? (
+        <Text style={styles.error}>
+          Group could not be deleted. Apply migration
+          005_chat_and_delete_permissions.sql.
         </Text>
       ) : null}
       {!groups.isLoading && !groups.data?.length ? (
@@ -138,7 +159,14 @@ export function GroupsScreen() {
             <Card key={group.id}>
               <View style={styles.cardHeader}>
                 <View style={styles.cardInfo}>
-                  <Text style={styles.groupName}>{group.name}</Text>
+                  <Text
+                    style={[
+                      styles.groupName,
+                      desktop && styles.groupNameDesktop,
+                    ]}
+                  >
+                    {group.name}
+                  </Text>
                   <Text style={styles.muted}>
                     {group.description || "No description"}
                   </Text>
@@ -173,7 +201,7 @@ export function GroupsScreen() {
         onRequestClose={() => setVisible(false)}
       >
         <ScreenContainer>
-          <Text style={styles.title}>
+          <Text style={[styles.title, desktop && styles.titleDesktop]}>
             {editing ? "Edit group" : "Create group"}
           </Text>
           <Controller
@@ -275,7 +303,8 @@ const styles = StyleSheet.create({
     color: "#5b4cf0",
     fontWeight: "800",
   },
-  title: { fontSize: 36, fontWeight: "900" },
+  title: { fontSize: 30, fontWeight: "900" },
+  titleDesktop: { fontSize: 36 },
   error: { color: "#b42336" },
   cardHeader: {
     flexDirection: "row",
@@ -283,8 +312,9 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   cardInfo: { flex: 1, gap: 4 },
-  groupName: { fontSize: 21, fontWeight: "800" },
-  muted: { color: "#686879", fontSize: 15, lineHeight: 22 },
+  groupName: { fontSize: 18, fontWeight: "800" },
+  groupNameDesktop: { fontSize: 21 },
+  muted: { color: "#686879", fontSize: 14, lineHeight: 20 },
   count: {
     minWidth: 36,
     textAlign: "center",
@@ -332,5 +362,5 @@ const styles = StyleSheet.create({
   },
   checkboxSelected: { backgroundColor: "#5b4cf0", borderColor: "#5b4cf0" },
   checkmark: { color: "#fff", fontWeight: "900" },
-  studentName: { fontSize: 18, fontWeight: "700" },
+  studentName: { fontSize: 16, fontWeight: "700" },
 });

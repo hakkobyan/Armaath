@@ -1,19 +1,34 @@
-import { StyleSheet, Text, View } from "react-native";
+import {
+  StyleSheet,
+  type StyleProp,
+  Text,
+  useWindowDimensions,
+  View,
+  type ViewStyle,
+} from "react-native";
 import { colors } from "@/lib/theme";
 export function EmptyState({
   title,
   message,
+  style,
 }: {
   title: string;
   message: string;
+  style?: StyleProp<ViewStyle>;
 }) {
+  const { width } = useWindowDimensions();
+  const desktop = width >= 900;
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, style]}>
       <View style={styles.icon}>
         <Text style={styles.spark}>✦</Text>
       </View>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.message}>{message}</Text>
+      <Text style={[styles.title, desktop && styles.titleDesktop]}>
+        {title}
+      </Text>
+      <Text style={[styles.message, desktop && styles.messageDesktop]}>
+        {message}
+      </Text>
     </View>
   );
 }
@@ -36,6 +51,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.mintSoft,
   },
   spark: { fontSize: 20, color: colors.mint },
-  title: { fontSize: 21, fontWeight: "800", color: colors.ink },
-  message: { color: colors.muted, fontSize: 16, textAlign: "center", lineHeight: 23 },
+  title: { fontSize: 18, fontWeight: "800", color: colors.ink },
+  titleDesktop: { fontSize: 21 },
+  message: {
+    color: colors.muted,
+    fontSize: 14,
+    textAlign: "center",
+    lineHeight: 20,
+  },
+  messageDesktop: { fontSize: 16, lineHeight: 23 },
 });

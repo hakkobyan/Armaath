@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as Linking from "expo-linking";
 import { useEffect, useRef, useState } from "react";
 import {
+  Alert,
   FlatList,
   Image,
   KeyboardAvoidingView,
@@ -11,6 +12,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  useWindowDimensions,
   View,
 } from "react-native";
 import { Button } from "@/components/Button";
@@ -47,17 +49,19 @@ function getSendError(error: unknown) {
   ) {
     const message = error.message;
     if (message.includes("row-level security"))
-      return "You do not have permission to send to this chat. Apply the latest Supabase chat migration.";
+      return "You do not have permission to send to this chat. Apply migration 005_chat_and_delete_permissions.sql.";
     if (message.includes("schema cache") || message.includes("attachment_"))
-      return "The Supabase chat schema is outdated. Apply migration 004_global_chat_attachments.sql.";
+      return "The Supabase chat schema is outdated. Apply migration 005_chat_and_delete_permissions.sql.";
     if (message.includes("Bucket not found"))
-      return "The chat attachment storage is not configured. Apply migration 004_global_chat_attachments.sql.";
+      return "The chat attachment storage is not configured. Apply migration 005_chat_and_delete_permissions.sql.";
     return message;
   }
   return "Message or attachment could not be sent.";
 }
 
 export function ChatScreen() {
+  const { width } = useWindowDimensions();
+  const desktop = width >= 900;
   const { profile } = useAuth();
   const groups = useCurrentGroup();
   const [selected, setSelected] = useState("global");
@@ -123,6 +127,21 @@ export function ChatScreen() {
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["messages", room.data?.id] }),
   });
+  const confirmMessageDelete = (id: string) => {
+    const message = "This message will be permanently deleted for everyone.";
+    if (Platform.OS === "web") {
+      if (window.confirm(message)) remove.mutate(id);
+      return;
+    }
+    Alert.alert("Delete message", message, [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: () => remove.mutate(id),
+      },
+    ]);
+  };
   const chooseAttachment = async (kind: "image" | "file") => {
     setAttachmentError(null);
     try {
@@ -137,12 +156,14 @@ export function ChatScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={styles.root}
+      style={[styles.root, desktop && styles.rootDesktop]}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <View style={styles.header}>
         <Text style={styles.kicker}>ARMATH COMMUNITY</Text>
-        <Text style={styles.title}>Chats</Text>
+        <Text style={[styles.title, desktop && styles.titleDesktop]}>
+          Chats
+        </Text>
       </View>
       <View style={styles.rooms}>
         <Pressable
@@ -157,6 +178,7 @@ export function ChatScreen() {
           <Text
             style={[
               styles.chipText,
+              desktop && styles.chipTextDesktop,
               selected === "global" && styles.chipTextSelected,
             ]}
           >
@@ -177,6 +199,7 @@ export function ChatScreen() {
             <Text
               style={[
                 styles.chipText,
+                desktop && styles.chipTextDesktop,
                 selected === group.id && styles.chipTextSelected,
               ]}
             >
@@ -189,7 +212,7 @@ export function ChatScreen() {
         <View style={styles.emptyChat}>
           <EmptyState
             title="Chat is not ready"
-            message="Apply migration 004_global_chat_attachments.sql in Supabase."
+            message="Apply migration 005_chat_and_delete_permissions.sql in Supabase."
           />
         </View>
       ) : (
@@ -224,7 +247,14 @@ export function ChatScreen() {
                 ) : (
                   <>
                     {item.content ? (
-                      <Text style={styles.content}>{item.content}</Text>
+                      <Text
+                        style={[
+                          styles.content,
+                          desktop && styles.contentDesktop,
+                        ]}
+                      >
+                        {item.content}
+                      </Text>
                     ) : null}
                     {image ? (
                       <Pressable
@@ -270,7 +300,7 @@ export function ChatScreen() {
                   </>
                 )}
                 {!item.is_deleted && (mine || profile?.role === "teacher") ? (
-                  <Pressable onPress={() => remove.mutate(item.id)}>
+                  <Pressable onPress={() => confirmMessageDelete(item.id)}>
                     <Text style={styles.delete}>Delete</Text>
                   </Pressable>
                 ) : null}
@@ -350,6 +380,12 @@ export function ChatScreen() {
         {send.isError ? (
           <Text style={styles.error}>{getSendError(send.error)}</Text>
         ) : null}
+        {remove.isError ? (
+          <Text style={styles.error}>
+            Message could not be deleted. Apply migration
+            005_chat_and_delete_permissions.sql.
+          </Text>
+        ) : null}
       </View>
     </KeyboardAvoidingView>
   );
@@ -360,9 +396,10 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     minHeight: 0,
-    paddingTop: 32,
+    paddingTop: 18,
     backgroundColor: "#F7F8FC",
   },
+  rootDesktop: { paddingTop: 32 },
   header: { paddingHorizontal: 20 },
   kicker: {
     fontSize: 13,
@@ -370,7 +407,8 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontWeight: "900",
   },
-  title: { fontSize: 36, fontWeight: "900", color: colors.ink, marginTop: 4 },
+  title: { fontSize: 30, fontWeight: "900", color: colors.ink, marginTop: 4 },
+  titleDesktop: { fontSize: 36 },
   rooms: { flexDirection: "row", gap: 8, padding: 16, flexWrap: "wrap" },
   chip: {
     flexDirection: "row",
@@ -384,7 +422,8 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
   },
   chipSelected: { backgroundColor: colors.primarySoft, borderColor: "#CFC7FF" },
-  chipText: { fontSize: 16, fontWeight: "700", color: colors.muted },
+  chipText: { fontSize: 14, fontWeight: "700", color: colors.muted },
+  chipTextDesktop: { fontSize: 16 },
   chipTextSelected: { color: colors.primaryDark },
   messages: { flex: 1, minHeight: 0 },
   list: { paddingHorizontal: 20, paddingVertical: 16, gap: 10, flexGrow: 1 },
@@ -414,7 +453,8 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 5,
   },
   sender: { fontSize: 13, color: colors.muted, fontWeight: "700" },
-  content: { fontSize: 17, lineHeight: 24, color: colors.ink },
+  content: { fontSize: 15, lineHeight: 21, color: colors.ink },
+  contentDesktop: { fontSize: 17, lineHeight: 24 },
   deleted: { fontStyle: "italic", color: colors.muted },
   delete: { fontSize: 14, color: colors.danger, fontWeight: "700" },
   image: {
@@ -446,8 +486,8 @@ const styles = StyleSheet.create({
   composer: {
     width: "100%",
     flexShrink: 0,
-    paddingHorizontal: 20,
-    paddingVertical: 14,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
     gap: 8,
     backgroundColor: "#fff",
     borderTopWidth: 1,

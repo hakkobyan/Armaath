@@ -54,7 +54,7 @@ export default function Layout() {
               outlineWidth: 0,
             }
           : {},
-        tabBarLabelStyle: { fontSize: desktop ? 16 : 12, fontWeight: "700" },
+        tabBarLabelStyle: { fontSize: desktop ? 16 : 10, fontWeight: "700" },
       }}
     >
       <Tabs.Screen

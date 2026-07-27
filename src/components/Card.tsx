@@ -1,18 +1,40 @@
 import type { PropsWithChildren } from "react";
-import { StyleSheet, View } from "react-native";
+import {
+  StyleSheet,
+  type StyleProp,
+  useWindowDimensions,
+  View,
+  type ViewStyle,
+} from "react-native";
 import { colors } from "@/lib/theme";
 export function Card({
   children,
   tone = "default",
-}: PropsWithChildren<{ tone?: "default" | "purple" | "mint" | "coral" }>) {
-  return <View style={[styles.card, styles[tone]]}>{children}</View>;
+  style,
+}: PropsWithChildren<{
+  tone?: "default" | "purple" | "mint" | "coral";
+  style?: StyleProp<ViewStyle>;
+}>) {
+  const { width } = useWindowDimensions();
+  return (
+    <View
+      style={[
+        styles.card,
+        width >= 900 && styles.cardDesktop,
+        styles[tone],
+        style,
+      ]}
+    >
+      {children}
+    </View>
+  );
 }
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.surface,
     borderRadius: 22,
-    padding: 22,
-    gap: 12,
+    padding: 16,
+    gap: 9,
     borderWidth: 1,
     borderColor: "#ECEEF3",
     shadowColor: "#25304A",
@@ -21,6 +43,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 7 },
     elevation: 2,
   },
+  cardDesktop: { padding: 22, gap: 12 },
   default: {},
   purple: { backgroundColor: colors.primarySoft, borderColor: "#DDD7FF" },
   mint: { backgroundColor: colors.mintSoft, borderColor: "#CBEFE4" },

@@ -43,8 +43,12 @@ export function DashboardScreen() {
           <Text style={styles.kicker}>
             {profile?.role === "teacher" ? "TEACHER SPACE" : "STUDENT SPACE"}
           </Text>
-          <Text style={styles.title}>Hi, {profile?.first_name} 👋</Text>
-          <Text style={styles.muted}>Ready to build something great?</Text>
+          <Text style={[styles.title, desktop && styles.titleDesktop]}>
+            Hi, {profile?.first_name} 👋
+          </Text>
+          <Text style={[styles.muted, desktop && styles.mutedDesktop]}>
+            Ready to build something great?
+          </Text>
         </View>
         <View style={styles.avatar}>
           <Text style={styles.avatarText}>
@@ -56,7 +60,11 @@ export function DashboardScreen() {
       <View style={styles.stats}>
         <View style={[styles.stat, styles.purple]}>
           <Ionicons name="people-outline" size={22} color={colors.primary} />
-          <Text style={styles.statNumber}>{ids.length}</Text>
+          <Text
+            style={[styles.statNumber, desktop && styles.statNumberDesktop]}
+          >
+            {ids.length}
+          </Text>
           <Text style={styles.statLabel}>Groups</Text>
         </View>
         <View style={[styles.stat, styles.mint]}>
@@ -69,7 +77,9 @@ export function DashboardScreen() {
             size={22}
             color={colors.mint}
           />
-          <Text style={styles.statNumber}>
+          <Text
+            style={[styles.statNumber, desktop && styles.statNumberDesktop]}
+          >
             {profile?.role === "teacher"
               ? (students.data ?? 0)
               : upcoming.length}
@@ -82,7 +92,7 @@ export function DashboardScreen() {
       <View style={[styles.mainGrid, desktop && styles.mainGridDesktop]}>
         <View style={styles.mainColumn}>
           {next ? (
-            <Card tone="coral">
+            <Card tone="coral" style={desktop && styles.equalCard}>
               <View style={styles.cardHeading}>
                 <View style={styles.roundIcon}>
                   <Ionicons
@@ -103,13 +113,14 @@ export function DashboardScreen() {
             </Card>
           ) : (
             <EmptyState
+              style={desktop && styles.equalCard}
               title="No upcoming lessons"
               message="Your next scheduled lesson will appear here."
             />
           )}
         </View>
         <View style={styles.mainColumn}>
-          <Card tone="purple">
+          <Card tone="purple" style={desktop && styles.equalCard}>
             <View style={styles.cardHeading}>
               <Ionicons
                 name="layers-outline"
@@ -179,8 +190,10 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontWeight: "900",
   },
-  title: { fontSize: 36, fontWeight: "900", color: colors.ink, marginTop: 5 },
-  muted: { color: colors.muted, fontSize: 16, lineHeight: 23 },
+  title: { fontSize: 30, fontWeight: "900", color: colors.ink, marginTop: 5 },
+  titleDesktop: { fontSize: 36 },
+  muted: { color: colors.muted, fontSize: 14, lineHeight: 20 },
+  mutedDesktop: { fontSize: 16, lineHeight: 23 },
   avatar: {
     width: 52,
     height: 52,
@@ -194,11 +207,13 @@ const styles = StyleSheet.create({
   stat: { flex: 1, borderRadius: 20, padding: 16, gap: 4 },
   purple: { backgroundColor: colors.primarySoft },
   mint: { backgroundColor: colors.mintSoft },
-  statNumber: { fontSize: 29, fontWeight: "900", color: colors.ink },
-  statLabel: { color: colors.muted, fontSize: 15, fontWeight: "700" },
+  statNumber: { fontSize: 24, fontWeight: "900", color: colors.ink },
+  statNumberDesktop: { fontSize: 29 },
+  statLabel: { color: colors.muted, fontSize: 13, fontWeight: "700" },
   mainGrid: { gap: 16 },
   mainGridDesktop: { flexDirection: "row", alignItems: "stretch" },
   mainColumn: { flex: 1, minWidth: 0 },
+  equalCard: { flex: 1 },
   cardHeading: { flexDirection: "row", alignItems: "center", gap: 10 },
   roundIcon: {
     width: 38,
@@ -214,8 +229,8 @@ const styles = StyleSheet.create({
     letterSpacing: 1.5,
     color: colors.coral,
   },
-  cardTitle: { fontSize: 22, fontWeight: "800", color: colors.ink },
-  time: { fontSize: 17, fontWeight: "700", color: colors.ink },
+  cardTitle: { fontSize: 19, fontWeight: "800", color: colors.ink },
+  time: { fontSize: 15, fontWeight: "700", color: colors.ink },
   groupRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -229,7 +244,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.mint,
   },
   groupBody: { flex: 1 },
-  group: { fontSize: 18, fontWeight: "700", color: colors.ink },
+  group: { fontSize: 16, fontWeight: "700", color: colors.ink },
   actions: { flexDirection: "row", gap: 12 },
   action: { flex: 1 },
 });

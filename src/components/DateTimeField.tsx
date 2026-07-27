@@ -2,7 +2,14 @@ import DateTimePicker, {
   type DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 import React, { useState } from "react";
-import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { formatDate, formatTime } from "@/utils/date";
 
 type PickerMode = "date" | "time";
@@ -30,6 +37,8 @@ export function DateTimeField({
   onChange: (value: string) => void;
   error?: string;
 }) {
+  const { width } = useWindowDimensions();
+  const desktop = width >= 900;
   const [mode, setMode] = useState<PickerMode | null>(null);
   const date = parseValue(value);
   const handleNativeChange = (event: DateTimePickerEvent, next?: Date) => {
@@ -40,13 +49,15 @@ export function DateTimeField({
   if (Platform.OS === "web")
     return (
       <View style={styles.wrap}>
-        <Text style={styles.label}>{label}</Text>
+        <Text style={[styles.label, desktop && styles.labelDesktop]}>
+          {label}
+        </Text>
         {React.createElement("input", {
           type: "datetime-local",
           value: toLocalInput(value),
           onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
             onChange(new Date(event.target.value).toISOString()),
-          style: webInputStyle,
+          style: { ...webInputStyle, ...(desktop ? webInputDesktopStyle : {}) },
         })}
         {error ? <Text style={styles.error}>{error}</Text> : null}
       </View>
@@ -103,22 +114,28 @@ export function DateTimeField({
 
 const webInputStyle: React.CSSProperties = {
   width: "100%",
-  minHeight: 56,
+  minHeight: 50,
   border: "1px solid #d8d7e1",
   borderRadius: 12,
-  padding: "0 16px",
-  fontSize: 17,
+  padding: "0 14px",
+  fontSize: 16,
   color: "#171721",
   backgroundColor: "#fff",
   boxSizing: "border-box",
 };
+const webInputDesktopStyle: React.CSSProperties = {
+  minHeight: 56,
+  padding: "0 16px",
+  fontSize: 17,
+};
 const styles = StyleSheet.create({
   wrap: { gap: 7 },
-  label: { fontSize: 16, fontWeight: "700", color: "#262638" },
+  label: { fontSize: 14, fontWeight: "700", color: "#262638" },
+  labelDesktop: { fontSize: 16 },
   row: { flexDirection: "row", gap: 10 },
   control: {
     flex: 1,
-    minHeight: 62,
+    minHeight: 58,
     borderWidth: 1,
     borderColor: "#d8d7e1",
     borderRadius: 12,
@@ -127,12 +144,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   controlHint: {
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: "800",
     letterSpacing: 1,
     color: "#7164e8",
   },
-  controlValue: { fontSize: 17, fontWeight: "600", color: "#171721" },
+  controlValue: { fontSize: 16, fontWeight: "600", color: "#171721" },
   picker: { borderRadius: 12, overflow: "hidden", backgroundColor: "#fff" },
   done: { alignSelf: "flex-end", padding: 12 },
   doneText: { color: "#5142da", fontSize: 16, fontWeight: "800" },

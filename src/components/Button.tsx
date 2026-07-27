@@ -3,6 +3,7 @@ import {
   Pressable,
   StyleSheet,
   Text,
+  useWindowDimensions,
   type PressableProps,
 } from "react-native";
 import { colors } from "@/lib/theme";
@@ -16,11 +17,14 @@ export function Button({
   loading?: boolean;
   variant?: "primary" | "danger" | "secondary";
 }) {
+  const { width } = useWindowDimensions();
+  const desktop = width >= 900;
   return (
     <Pressable
       accessibilityRole="button"
       style={({ pressed }) => [
         styles.base,
+        desktop && styles.baseDesktop,
         styles[variant],
         pressed && styles.pressed,
         props.disabled && styles.disabled,
@@ -33,7 +37,11 @@ export function Button({
         />
       ) : (
         <Text
-          style={[styles.text, variant === "secondary" && styles.secondaryText]}
+          style={[
+            styles.text,
+            desktop && styles.textDesktop,
+            variant === "secondary" && styles.secondaryText,
+          ]}
         >
           {title}
         </Text>
@@ -43,7 +51,7 @@ export function Button({
 }
 const styles = StyleSheet.create({
   base: {
-    minHeight: 56,
+    minHeight: 48,
     borderRadius: 16,
     alignItems: "center",
     justifyContent: "center",
@@ -54,10 +62,12 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 5 },
     elevation: 3,
   },
+  baseDesktop: { minHeight: 56 },
   primary: { backgroundColor: colors.primary },
   danger: { backgroundColor: colors.danger },
   secondary: { backgroundColor: colors.primarySoft, shadowOpacity: 0 },
-  text: { color: "#fff", fontSize: 17, fontWeight: "800", letterSpacing: 0.2 },
+  text: { color: "#fff", fontSize: 15, fontWeight: "800", letterSpacing: 0.2 },
+  textDesktop: { fontSize: 17 },
   secondaryText: { color: colors.primaryDark },
   pressed: { opacity: 0.82, transform: [{ scale: 0.985 }] },
   disabled: { opacity: 0.5 },

@@ -108,7 +108,9 @@ export function ScheduleScreen() {
   return (
     <ScreenContainer>
       <View style={styles.header}>
-        <Text style={styles.title}>Schedule</Text>
+        <Text style={[styles.title, desktop && styles.titleDesktop]}>
+          Schedule
+        </Text>
         {profile?.role === "teacher" ? (
           <Button title="Add lesson" onPress={() => open()} />
         ) : null}
@@ -126,7 +128,9 @@ export function ScheduleScreen() {
       ) : (
         scheduleDays.map(([date, items]) => (
           <View key={date} style={styles.day}>
-            <Text style={styles.date}>{date}</Text>
+            <Text style={[styles.date, desktop && styles.dateDesktop]}>
+              {date}
+            </Text>
             <View style={styles.lessonGrid}>
               {items.map((item) => (
                 <View
@@ -141,14 +145,19 @@ export function ScheduleScreen() {
                       <Text
                         style={[
                           styles.lesson,
+                          desktop && styles.lessonDesktop,
                           item.status === "cancelled" && styles.cancelled,
                         ]}
                       >
                         {item.title}
                       </Text>
-                      <Text style={styles.status}>{item.status}</Text>
+                      <Text
+                        style={[styles.status, desktop && styles.statusDesktop]}
+                      >
+                        {item.status}
+                      </Text>
                     </View>
-                    <Text style={styles.meta}>
+                    <Text style={[styles.meta, desktop && styles.metaDesktop]}>
                       {item.groups?.name} · {formatTime(item.starts_at)}–
                       {formatTime(item.ends_at)}
                     </Text>
@@ -196,7 +205,7 @@ export function ScheduleScreen() {
         onRequestClose={() => setVisible(false)}
       >
         <ScreenContainer>
-          <Text style={styles.title}>
+          <Text style={[styles.title, desktop && styles.titleDesktop]}>
             {editing ? "Edit lesson" : "New lesson"}
           </Text>
           <Text style={styles.label}>Group</Text>
@@ -309,9 +318,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  title: { fontSize: 36, fontWeight: "900" },
+  title: { fontSize: 30, fontWeight: "900" },
+  titleDesktop: { fontSize: 36 },
   day: { gap: 12, marginTop: 4 },
-  date: { fontSize: 20, fontWeight: "800" },
+  date: { fontSize: 17, fontWeight: "800" },
+  dateDesktop: { fontSize: 20 },
   lessonGrid: { flexDirection: "row", flexWrap: "wrap", gap: 16 },
   lessonCell: { width: "100%" },
   lessonCellDesktop: { width: "48%", flexGrow: 1, minWidth: 360 },
@@ -321,9 +332,10 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     gap: 12,
   },
-  lesson: { flex: 1, fontSize: 21, fontWeight: "800" },
+  lesson: { flex: 1, fontSize: 18, fontWeight: "800" },
+  lessonDesktop: { fontSize: 21 },
   status: {
-    fontSize: 13,
+    fontSize: 11,
     fontWeight: "800",
     color: "#5142da",
     backgroundColor: "#EFECFF",
@@ -332,13 +344,15 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     textTransform: "capitalize",
   },
-  meta: { fontSize: 16, fontWeight: "700", color: "#30384B" },
+  statusDesktop: { fontSize: 13 },
+  meta: { fontSize: 14, fontWeight: "700", color: "#30384B" },
+  metaDesktop: { fontSize: 16 },
   cancelled: { textDecorationLine: "line-through", color: "#a33" },
-  muted: { color: "#686879", fontSize: 15, lineHeight: 22 },
-  description: { fontSize: 16, lineHeight: 23, color: "#30384B" },
+  muted: { color: "#686879", fontSize: 14, lineHeight: 20 },
+  description: { fontSize: 15, lineHeight: 21, color: "#30384B" },
   actions: { flexDirection: "row", gap: 24, marginTop: 12, paddingTop: 4 },
-  link: { color: "#5142da", fontSize: 16, fontWeight: "800" },
-  danger: { color: "#b42336", fontSize: 16, fontWeight: "800" },
+  link: { color: "#5142da", fontSize: 14, fontWeight: "800" },
+  danger: { color: "#b42336", fontSize: 14, fontWeight: "800" },
   error: { color: "#b42336", fontSize: 15 },
   label: { fontSize: 16, fontWeight: "700", textTransform: "capitalize" },
   choices: { flexDirection: "row", flexWrap: "wrap", gap: 8 },

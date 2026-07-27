@@ -8,6 +8,8 @@ Migration `003_teacher_group_management.sql` lets authenticated teachers browse 
 
 Migration `004_global_chat_attachments.sql` adds one global room available to all students (with teachers able to moderate), attachment metadata on messages, and a private `chat-attachments` Storage bucket. Object paths contain the room and uploader IDs. Storage RLS checks room access for every upload/download, limits files to 10 MB, and signed URLs expire after one hour.
 
+Migration `005_chat_and_delete_permissions.sql` repairs the global chat setup, recreates the private attachment bucket policies, grants teachers deletion access only to groups they own, and permits hard deletion of messages by their author or by a teacher moderating an accessible room.
+
 The Auth trigger creates a profile from `first_name` and `last_name` metadata. Every newly registered account is assigned `student` at the database level, so a modified client cannot self-assign `teacher`. Administrators promote teacher profiles explicitly after creating them. Public email registration must be enabled for the student registration screen.
 
 For sample data, create Auth users first, replace the three placeholder UUIDs in `seed.sql`, and run it. Auth users are deliberately not created in seed SQL. Never expose the service-role key to Expo.
