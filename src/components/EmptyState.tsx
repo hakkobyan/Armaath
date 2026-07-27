@@ -34,7 +34,7 @@ export function EmptyState({
 }
 const styles = StyleSheet.create({
   root: {
-    padding: 26,
+    padding: 20,
     alignItems: "center",
     gap: 8,
     backgroundColor: colors.surface,
@@ -51,11 +51,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.mintSoft,
   },
   spark: { fontSize: 20, color: colors.mint },
-  title: { fontSize: 18, fontWeight: "800", color: colors.ink },
+  title: { fontSize: 17, fontWeight: "800", color: colors.ink },
   titleDesktop: { fontSize: 21 },
   message: {
     color: colors.muted,
-    fontSize: 14,
+    fontSize: 13,
     textAlign: "center",
     lineHeight: 20,
   },

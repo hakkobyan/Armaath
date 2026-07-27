@@ -39,16 +39,16 @@ export const Input = forwardRef<
 });
 Input.displayName = "Input";
 const styles = StyleSheet.create({
-  wrap: { gap: 7 },
-  label: { fontSize: 14, fontWeight: "700", color: colors.ink },
+  wrap: { gap: 5 },
+  label: { fontSize: 13, fontWeight: "700", color: colors.ink },
   labelDesktop: { fontSize: 16 },
   input: {
-    minHeight: 50,
+    minHeight: 46,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 16,
-    paddingHorizontal: 16,
-    fontSize: 16,
+    borderRadius: 14,
+    paddingHorizontal: 14,
+    fontSize: 15,
     color: colors.ink,
     backgroundColor: colors.surface,
     shadowColor: "#25304A",

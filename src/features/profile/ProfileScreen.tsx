@@ -40,10 +40,10 @@ export function ProfileScreen() {
   );
 }
 const styles = StyleSheet.create({
-  title: { fontSize: 30, fontWeight: "900" },
+  title: { fontSize: 27, fontWeight: "900" },
   titleDesktop: { fontSize: 36 },
-  name: { fontSize: 22, fontWeight: "800" },
-  role: { color: "#5b4cf0", fontSize: 15, fontWeight: "800" },
-  heading: { fontSize: 21, fontWeight: "800" },
-  body: { fontSize: 15, lineHeight: 22 },
+  name: { fontSize: 19, fontWeight: "800" },
+  role: { color: "#5b4cf0", fontSize: 13, fontWeight: "800" },
+  heading: { fontSize: 18, fontWeight: "800" },
+  body: { fontSize: 14, lineHeight: 20 },
 });

@@ -40,9 +40,9 @@ export default function Layout() {
               shadowRadius: 18,
             }
           : {
-              height: 72,
-              paddingTop: 8,
-              paddingBottom: 10,
+              height: 62,
+              paddingTop: 5,
+              paddingBottom: 6,
               backgroundColor: "#fff",
               borderTopColor: "#EAECF0",
             },
@@ -62,7 +62,11 @@ export default function Layout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home-outline" color={color} size={size} />
+            <Ionicons
+              name="home-outline"
+              color={color}
+              size={desktop ? size : 21}
+            />
           ),
         }}
       />
@@ -71,7 +75,11 @@ export default function Layout() {
         options={{
           title: "Groups",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="people-outline" color={color} size={size} />
+            <Ionicons
+              name="people-outline"
+              color={color}
+              size={desktop ? size : 21}
+            />
           ),
         }}
       />
@@ -80,7 +88,11 @@ export default function Layout() {
         options={{
           title: "Schedule",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="calendar-outline" color={color} size={size} />
+            <Ionicons
+              name="calendar-outline"
+              color={color}
+              size={desktop ? size : 21}
+            />
           ),
         }}
       />
@@ -89,7 +101,11 @@ export default function Layout() {
         options={{
           title: "Chat",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="chatbubbles-outline" color={color} size={size} />
+            <Ionicons
+              name="chatbubbles-outline"
+              color={color}
+              size={desktop ? size : 21}
+            />
           ),
         }}
       />
@@ -98,7 +114,11 @@ export default function Layout() {
         options={{
           title: "Profile",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-outline" color={color} size={size} />
+            <Ionicons
+              name="person-outline"
+              color={color}
+              size={desktop ? size : 21}
+            />
           ),
         }}
       />

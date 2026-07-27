@@ -159,13 +159,13 @@ export function ChatScreen() {
       style={[styles.root, desktop && styles.rootDesktop]}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <View style={styles.header}>
+      <View style={[styles.header, desktop && styles.headerDesktop]}>
         <Text style={styles.kicker}>ARMATH COMMUNITY</Text>
         <Text style={[styles.title, desktop && styles.titleDesktop]}>
           Chats
         </Text>
       </View>
-      <View style={styles.rooms}>
+      <View style={[styles.rooms, desktop && styles.roomsDesktop]}>
         <Pressable
           style={[styles.chip, selected === "global" && styles.chipSelected]}
           onPress={() => setSelected("global")}
@@ -221,7 +221,7 @@ export function ChatScreen() {
           ref={list}
           data={messages.data}
           keyExtractor={(message) => message.id}
-          contentContainerStyle={styles.list}
+          contentContainerStyle={[styles.list, desktop && styles.listDesktop]}
           ListEmptyComponent={
             <EmptyState
               title="Start the conversation"
@@ -396,48 +396,51 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     minHeight: 0,
-    paddingTop: 18,
+    paddingTop: 14,
     backgroundColor: "#F7F8FC",
   },
   rootDesktop: { paddingTop: 32 },
-  header: { paddingHorizontal: 20 },
+  header: { paddingHorizontal: 12 },
+  headerDesktop: { paddingHorizontal: 20 },
   kicker: {
-    fontSize: 13,
-    letterSpacing: 2,
+    fontSize: 10,
+    letterSpacing: 1.7,
     color: colors.primary,
     fontWeight: "900",
   },
-  title: { fontSize: 30, fontWeight: "900", color: colors.ink, marginTop: 4 },
+  title: { fontSize: 27, fontWeight: "900", color: colors.ink, marginTop: 2 },
   titleDesktop: { fontSize: 36 },
-  rooms: { flexDirection: "row", gap: 8, padding: 16, flexWrap: "wrap" },
+  rooms: { flexDirection: "row", gap: 6, padding: 10, flexWrap: "wrap" },
+  roomsDesktop: { gap: 8, padding: 16 },
   chip: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 6,
-    paddingHorizontal: 13,
-    paddingVertical: 10,
+    gap: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 7,
     borderRadius: 22,
     backgroundColor: "#fff",
     borderWidth: 1,
     borderColor: colors.border,
   },
   chipSelected: { backgroundColor: colors.primarySoft, borderColor: "#CFC7FF" },
-  chipText: { fontSize: 14, fontWeight: "700", color: colors.muted },
+  chipText: { fontSize: 12, fontWeight: "700", color: colors.muted },
   chipTextDesktop: { fontSize: 16 },
   chipTextSelected: { color: colors.primaryDark },
   messages: { flex: 1, minHeight: 0 },
-  list: { paddingHorizontal: 20, paddingVertical: 16, gap: 10, flexGrow: 1 },
+  list: { paddingHorizontal: 12, paddingVertical: 10, gap: 8, flexGrow: 1 },
+  listDesktop: { paddingHorizontal: 20, paddingVertical: 16, gap: 10 },
   emptyChat: {
     flex: 1,
     justifyContent: "center",
-    paddingHorizontal: 20,
-    paddingVertical: 24,
+    paddingHorizontal: 12,
+    paddingVertical: 18,
   },
   message: {
     alignSelf: "flex-start",
     maxWidth: "86%",
-    padding: 13,
-    borderRadius: 18,
+    padding: 11,
+    borderRadius: 16,
     borderBottomLeftRadius: 5,
     backgroundColor: "#fff",
     gap: 6,
@@ -452,8 +455,8 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 18,
     borderBottomRightRadius: 5,
   },
-  sender: { fontSize: 13, color: colors.muted, fontWeight: "700" },
-  content: { fontSize: 15, lineHeight: 21, color: colors.ink },
+  sender: { fontSize: 12, color: colors.muted, fontWeight: "700" },
+  content: { fontSize: 14, lineHeight: 20, color: colors.ink },
   contentDesktop: { fontSize: 17, lineHeight: 24 },
   deleted: { fontStyle: "italic", color: colors.muted },
   delete: { fontSize: 14, color: colors.danger, fontWeight: "700" },
@@ -486,9 +489,9 @@ const styles = StyleSheet.create({
   composer: {
     width: "100%",
     flexShrink: 0,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    gap: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 7,
+    gap: 6,
     backgroundColor: "#fff",
     borderTopWidth: 1,
     borderTopColor: colors.border,
@@ -497,27 +500,27 @@ const styles = StyleSheet.create({
     shadowRadius: 14,
     shadowOffset: { width: 0, height: -4 },
   },
-  composeRow: { flexDirection: "row", gap: 8, alignItems: "flex-end" },
-  attachButtons: { flexDirection: "row", gap: 5 },
+  composeRow: { flexDirection: "row", gap: 6, alignItems: "flex-end" },
+  attachButtons: { flexDirection: "row", gap: 4 },
   iconButton: {
-    width: 42,
-    height: 48,
-    borderRadius: 14,
+    width: 38,
+    height: 44,
+    borderRadius: 12,
     backgroundColor: colors.primarySoft,
     alignItems: "center",
     justifyContent: "center",
   },
   input: {
     flex: 1,
-    minHeight: 54,
-    maxHeight: 110,
+    minHeight: 44,
+    maxHeight: 96,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 16,
-    paddingHorizontal: 13,
-    paddingVertical: 11,
+    borderRadius: 13,
+    paddingHorizontal: 11,
+    paddingVertical: 9,
     color: colors.ink,
-    fontSize: 17,
+    fontSize: 15,
     backgroundColor: "#FAFBFC",
   },
   pending: {

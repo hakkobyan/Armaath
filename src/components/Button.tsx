@@ -51,11 +51,11 @@ export function Button({
 }
 const styles = StyleSheet.create({
   base: {
-    minHeight: 48,
-    borderRadius: 16,
+    minHeight: 44,
+    borderRadius: 14,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
     shadowColor: "#352A82",
     shadowOpacity: 0.16,
     shadowRadius: 10,
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
   primary: { backgroundColor: colors.primary },
   danger: { backgroundColor: colors.danger },
   secondary: { backgroundColor: colors.primarySoft, shadowOpacity: 0 },
-  text: { color: "#fff", fontSize: 15, fontWeight: "800", letterSpacing: 0.2 },
+  text: { color: "#fff", fontSize: 14, fontWeight: "800", letterSpacing: 0.2 },
   textDesktop: { fontSize: 17 },
   secondaryText: { color: colors.primaryDark },
   pressed: { opacity: 0.82, transform: [{ scale: 0.985 }] },

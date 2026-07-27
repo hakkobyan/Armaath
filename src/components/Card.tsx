@@ -32,9 +32,9 @@ export function Card({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.surface,
-    borderRadius: 22,
-    padding: 16,
-    gap: 9,
+    borderRadius: 18,
+    padding: 13,
+    gap: 7,
     borderWidth: 1,
     borderColor: "#ECEEF3",
     shadowColor: "#25304A",
