@@ -1,12 +1,19 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 import { EmptyState } from "@/components/EmptyState";
 import { ScreenContainer } from "@/components/ScreenContainer";
 import { useAuth } from "@/hooks/useAuth";
+import { useAvatarUrl } from "@/hooks/useAvatarUrl";
 import { useCurrentGroup } from "@/hooks/useCurrentGroup";
 import { colors } from "@/lib/theme";
 import { countStudents } from "@/services/groups.service";
@@ -18,6 +25,7 @@ export function DashboardScreen() {
   const desktop = width >= 900;
   const phone = width < 480;
   const { profile } = useAuth();
+  const avatar = useAvatarUrl(profile?.avatar_url);
   const router = useRouter();
   const groups = useCurrentGroup();
   const ids = groups.data?.map((group) => group.id) ?? [];
@@ -52,12 +60,21 @@ export function DashboardScreen() {
           </Text>
         </View>
         <View style={[styles.avatar, desktop && styles.avatarDesktop]}>
-          <Text
-            style={[styles.avatarText, desktop && styles.avatarTextDesktop]}
-          >
-            {profile?.first_name?.[0]}
-            {profile?.last_name?.[0]}
-          </Text>
+          {avatar.data ? (
+            <Image
+              source={{ uri: avatar.data }}
+              style={styles.avatarImage}
+              resizeMode="cover"
+              accessibilityLabel="Profile photo"
+            />
+          ) : (
+            <Text
+              style={[styles.avatarText, desktop && styles.avatarTextDesktop]}
+            >
+              {profile?.first_name?.[0]}
+              {profile?.last_name?.[0]}
+            </Text>
+          )}
         </View>
       </View>
       <View style={styles.stats}>
@@ -217,7 +234,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
+    overflow: "hidden",
   },
+  avatarImage: { width: "100%", height: "100%" },
   avatarDesktop: { width: 52, height: 52, borderRadius: 18 },
   avatarText: { color: "#fff", fontSize: 16, fontWeight: "900" },
   avatarTextDesktop: { fontSize: 19 },

@@ -10,6 +10,8 @@ Migration `004_global_chat_attachments.sql` adds one global room available to al
 
 Migration `005_chat_and_delete_permissions.sql` repairs the global chat setup, recreates the private attachment bucket policies, grants teachers deletion access only to groups they own, and permits hard deletion of messages by their author or by a teacher moderating an accessible room.
 
+Migration `006_account_settings.sql` creates a private `avatars` bucket. Signed-in users may read profile photos, while uploads and deletions are restricted to the account owner's folder. Images are limited to JPEG, PNG, or WebP files up to 5 MB.
+
 The Auth trigger creates a profile from `first_name` and `last_name` metadata. Every newly registered account is assigned `student` at the database level, so a modified client cannot self-assign `teacher`. Administrators promote teacher profiles explicitly after creating them. Public email registration must be enabled for the student registration screen.
 
 For sample data, create Auth users first, replace the three placeholder UUIDs in `seed.sql`, and run it. Auth users are deliberately not created in seed SQL. Never expose the service-role key to Expo.
