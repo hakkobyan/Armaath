@@ -3,12 +3,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as Linking from "expo-linking";
 import { useEffect, useRef, useState } from "react";
 import {
+  ActivityIndicator,
   Alert,
   FlatList,
   Image,
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -62,6 +64,7 @@ function getSendError(error: unknown) {
 export function ChatScreen() {
   const { width } = useWindowDimensions();
   const desktop = width >= 900;
+  const phone = width < 480;
   const { profile } = useAuth();
   const groups = useCurrentGroup();
   const [selected, setSelected] = useState("global");
@@ -153,6 +156,8 @@ export function ChatScreen() {
       );
     }
   };
+  const sendDisabled =
+    (!text.trim() && !attachment) || send.isPending || !room.data;
 
   return (
     <KeyboardAvoidingView
@@ -165,7 +170,12 @@ export function ChatScreen() {
           Chats
         </Text>
       </View>
-      <View style={[styles.rooms, desktop && styles.roomsDesktop]}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.roomScroller}
+        contentContainerStyle={[styles.rooms, desktop && styles.roomsDesktop]}
+      >
         <Pressable
           style={[styles.chip, selected === "global" && styles.chipSelected]}
           onPress={() => setSelected("global")}
@@ -207,7 +217,7 @@ export function ChatScreen() {
             </Text>
           </Pressable>
         ))}
-      </View>
+      </ScrollView>
       {room.isError || (room.isFetched && !room.data) ? (
         <View style={styles.emptyChat}>
           <EmptyState
@@ -234,10 +244,20 @@ export function ChatScreen() {
           }
           renderItem={({ item }) => {
             const mine = item.sender_id === profile?.id;
+            const hasAttachment = Boolean(item.attachment_url);
             const image =
               item.attachment_type?.startsWith("image/") && item.attachment_url;
             return (
-              <View style={[styles.message, mine && styles.mine]}>
+              <View
+                style={[
+                  styles.message,
+                  hasAttachment && styles.attachmentMessage,
+                  hasAttachment && {
+                    width: Math.min(width - 48, desktop ? 520 : 320),
+                  },
+                  mine && styles.mine,
+                ]}
+              >
                 <Text style={styles.sender}>
                   {item.profiles?.first_name ?? "Member"} ·{" "}
                   {formatTime(item.created_at)}
@@ -338,7 +358,7 @@ export function ChatScreen() {
         {attachmentError ? (
           <Text style={styles.error}>{attachmentError}</Text>
         ) : null}
-        <View style={styles.composeRow}>
+        <View style={[styles.composeRow, phone && styles.composeRowPhone]}>
           <View style={styles.attachButtons}>
             <Pressable
               accessibilityLabel="Add image"
@@ -368,14 +388,31 @@ export function ChatScreen() {
             maxLength={2000}
             multiline
           />
-          <Button
-            title="Send"
-            disabled={
-              (!text.trim() && !attachment) || send.isPending || !room.data
-            }
-            loading={send.isPending}
-            onPress={() => send.mutate()}
-          />
+          {phone ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Send message"
+              disabled={sendDisabled}
+              style={[
+                styles.sendButton,
+                sendDisabled && styles.sendButtonDisabled,
+              ]}
+              onPress={() => send.mutate()}
+            >
+              {send.isPending ? (
+                <ActivityIndicator color="#fff" size="small" />
+              ) : (
+                <Ionicons name="arrow-up" size={22} color="#fff" />
+              )}
+            </Pressable>
+          ) : (
+            <Button
+              title="Send"
+              disabled={sendDisabled}
+              loading={send.isPending}
+              onPress={() => send.mutate()}
+            />
+          )}
         </View>
         {send.isError ? (
           <Text style={styles.error}>{getSendError(send.error)}</Text>
@@ -410,7 +447,8 @@ const styles = StyleSheet.create({
   },
   title: { fontSize: 27, fontWeight: "900", color: colors.ink, marginTop: 2 },
   titleDesktop: { fontSize: 36 },
-  rooms: { flexDirection: "row", gap: 6, padding: 10, flexWrap: "wrap" },
+  roomScroller: { flexGrow: 0 },
+  rooms: { flexDirection: "row", gap: 7, padding: 12 },
   roomsDesktop: { gap: 8, padding: 16 },
   chip: {
     flexDirection: "row",
@@ -449,6 +487,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 3 },
   },
+  attachmentMessage: { maxWidth: "92%" },
   mine: {
     alignSelf: "flex-end",
     backgroundColor: colors.primarySoft,
@@ -461,8 +500,8 @@ const styles = StyleSheet.create({
   deleted: { fontStyle: "italic", color: colors.muted },
   delete: { fontSize: 14, color: colors.danger, fontWeight: "700" },
   image: {
-    width: 230,
-    height: 170,
+    width: "100%",
+    aspectRatio: 1.6,
     borderRadius: 13,
     backgroundColor: "#E4E7EC",
   },
@@ -501,6 +540,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: -4 },
   },
   composeRow: { flexDirection: "row", gap: 6, alignItems: "flex-end" },
+  composeRowPhone: { gap: 5 },
   attachButtons: { flexDirection: "row", gap: 4 },
   iconButton: {
     width: 38,
@@ -523,6 +563,20 @@ const styles = StyleSheet.create({
     fontSize: 15,
     backgroundColor: "#FAFBFC",
   },
+  sendButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.primary,
+    shadowColor: "#352A82",
+    shadowOpacity: 0.16,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 2,
+  },
+  sendButtonDisabled: { opacity: 0.45 },
   pending: {
     flexDirection: "row",
     alignItems: "center",

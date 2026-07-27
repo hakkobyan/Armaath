@@ -34,9 +34,9 @@ export function EmptyState({
 }
 const styles = StyleSheet.create({
   root: {
-    padding: 20,
+    padding: 24,
     alignItems: "center",
-    gap: 8,
+    gap: 9,
     backgroundColor: colors.surface,
     borderRadius: 22,
     borderWidth: 1,

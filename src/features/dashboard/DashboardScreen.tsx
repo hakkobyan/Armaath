@@ -99,7 +99,10 @@ export function DashboardScreen() {
       <View style={[styles.mainGrid, desktop && styles.mainGridDesktop]}>
         <View style={styles.mainColumn}>
           {next ? (
-            <Card tone="coral" style={desktop && styles.equalCard}>
+            <Card
+              tone="coral"
+              style={[styles.dashboardCard, desktop && styles.equalCard]}
+            >
               <View style={styles.cardHeading}>
                 <View
                   style={[styles.roundIcon, desktop && styles.roundIconDesktop]}
@@ -122,14 +125,17 @@ export function DashboardScreen() {
             </Card>
           ) : (
             <EmptyState
-              style={desktop && styles.equalCard}
+              style={[styles.dashboardCard, desktop && styles.equalCard]}
               title="No upcoming lessons"
               message="Your next scheduled lesson will appear here."
             />
           )}
         </View>
         <View style={styles.mainColumn}>
-          <Card tone="purple" style={desktop && styles.equalCard}>
+          <Card
+            tone="purple"
+            style={[styles.dashboardCard, desktop && styles.equalCard]}
+          >
             <View style={styles.cardHeading}>
               <Ionicons
                 name="layers-outline"
@@ -215,16 +221,17 @@ const styles = StyleSheet.create({
   avatarDesktop: { width: 52, height: 52, borderRadius: 18 },
   avatarText: { color: "#fff", fontSize: 16, fontWeight: "900" },
   avatarTextDesktop: { fontSize: 19 },
-  stats: { flexDirection: "row", gap: 8 },
-  stat: { flex: 1, borderRadius: 16, padding: 12, gap: 2 },
+  stats: { flexDirection: "row", gap: 12 },
+  stat: { flex: 1, borderRadius: 18, padding: 15, gap: 3 },
   purple: { backgroundColor: colors.primarySoft },
   mint: { backgroundColor: colors.mintSoft },
   statNumber: { fontSize: 21, fontWeight: "900", color: colors.ink },
   statNumberDesktop: { fontSize: 29 },
   statLabel: { color: colors.muted, fontSize: 12, fontWeight: "700" },
-  mainGrid: { gap: 10 },
+  mainGrid: { gap: 20 },
   mainGridDesktop: { flexDirection: "row", alignItems: "stretch" },
   mainColumn: { flex: 1, minWidth: 0 },
+  dashboardCard: { padding: 20 },
   equalCard: { flex: 1 },
   cardHeading: { flexDirection: "row", alignItems: "center", gap: 8 },
   roundIcon: {
@@ -258,7 +265,7 @@ const styles = StyleSheet.create({
   },
   groupBody: { flex: 1 },
   group: { fontSize: 15, fontWeight: "700", color: colors.ink },
-  actions: { flexDirection: "row", gap: 8 },
+  actions: { flexDirection: "row", gap: 12 },
   actionsPhone: { flexDirection: "column" },
   action: { flex: 1 },
 });

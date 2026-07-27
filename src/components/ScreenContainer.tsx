@@ -34,10 +34,10 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.background },
   content: {
     width: "100%",
-    paddingHorizontal: 12,
-    paddingTop: 14,
-    paddingBottom: 24,
-    gap: 10,
+    paddingHorizontal: 18,
+    paddingTop: 20,
+    paddingBottom: 32,
+    gap: 14,
     flexGrow: 1,
   },
   contentDesktop: {
