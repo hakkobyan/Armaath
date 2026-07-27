@@ -169,7 +169,7 @@ export function ChatScreen() {
         <PageHeader
           eyebrow="ARMATH COMMUNITY"
           title="Chats"
-          description="Share ideas, files, and updates with your learning community."
+          description={`All students · ${groups.data?.length ?? 0} group chats`}
         />
       </View>
       <ScrollView

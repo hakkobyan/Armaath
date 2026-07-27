@@ -125,7 +125,7 @@ export function ScheduleScreen() {
       <PageHeader
         eyebrow="LEARNING PLAN"
         title="Schedule"
-        description="See every lesson, change plans, and keep your groups on track."
+        description={`${query.data?.length ?? 0} lessons across ${groups.data?.length ?? 0} groups`}
         action={
           profile?.role === "teacher" ? (
             <Button title="Add lesson" onPress={() => open()} />
@@ -170,7 +170,12 @@ export function ScheduleScreen() {
                       desktop && styles.lessonCellDesktop,
                     ]}
                   >
-                    <Card style={styles.lessonCard}>
+                    <Card
+                      style={[
+                        styles.lessonCard,
+                        { borderLeftColor: tone.color },
+                      ]}
+                    >
                       <View style={styles.lessonHeader}>
                         <Text
                           style={[
@@ -425,7 +430,7 @@ const styles = StyleSheet.create({
   lessonGrid: { flexDirection: "row", flexWrap: "wrap", gap: 12 },
   lessonCell: { width: "100%" },
   lessonCellDesktop: { width: "48%", flexGrow: 1, minWidth: 360 },
-  lessonCard: { height: "100%" },
+  lessonCard: { height: "100%", borderLeftWidth: 4 },
   lessonHeader: {
     flexDirection: "row",
     justifyContent: "space-between",

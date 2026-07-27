@@ -135,7 +135,7 @@ export function GroupsScreen() {
       <PageHeader
         eyebrow="TEACHER SPACE"
         title="Groups"
-        description="Organize students into focused learning communities."
+        description={`${groups.data?.length ?? 0} groups · ${memberData?.length ?? 0} student assignments`}
         action={<Button title="New group" onPress={() => open()} />}
       />
       {groups.isError || students.isError || members.isError ? (
@@ -194,7 +194,12 @@ export function GroupsScreen() {
                   {groupMembers.length ? (
                     groupMembers.map((member) => (
                       <View key={member.id} style={styles.memberRow}>
-                        <View style={styles.memberDot} />
+                        <View style={styles.memberAvatar}>
+                          <Text style={styles.memberInitials}>
+                            {member.profiles?.first_name?.[0]}
+                            {member.profiles?.last_name?.[0]}
+                          </Text>
+                        </View>
                         <Text style={styles.memberName}>
                           {member.profiles?.first_name}{" "}
                           {member.profiles?.last_name}
@@ -388,12 +393,15 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
   memberRow: { flexDirection: "row", alignItems: "center", gap: 8 },
-  memberDot: {
-    width: 7,
-    height: 7,
-    borderRadius: 4,
-    backgroundColor: colors.mint,
+  memberAvatar: {
+    width: 30,
+    height: 30,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.mintSoft,
   },
+  memberInitials: { color: colors.mintDark, fontSize: 11, fontWeight: "900" },
   memberName: { color: colors.inkSoft, fontSize: 14, lineHeight: 20 },
   actions: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: 6 },
   actionButton: {

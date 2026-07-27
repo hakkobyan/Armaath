@@ -8,7 +8,7 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import { Button } from "@/components/Button";
+import { ActionTile } from "@/components/ActionTile";
 import { Card } from "@/components/Card";
 import { EmptyState } from "@/components/EmptyState";
 import { PageHeader } from "@/components/PageHeader";
@@ -16,7 +16,7 @@ import { ScreenContainer } from "@/components/ScreenContainer";
 import { useAuth } from "@/hooks/useAuth";
 import { useAvatarUrl } from "@/hooks/useAvatarUrl";
 import { useCurrentGroup } from "@/hooks/useCurrentGroup";
-import { colors } from "@/lib/theme";
+import { colors, spacing } from "@/lib/theme";
 import { countStudents } from "@/services/groups.service";
 import { getSchedule } from "@/services/schedule.service";
 import { formatDate, formatTime } from "@/utils/date";
@@ -124,7 +124,7 @@ export function DashboardScreen() {
       </View>
 
       <View style={[styles.mainGrid, desktop && styles.mainGridDesktop]}>
-        <View style={styles.mainColumn}>
+        <View style={[styles.mainColumn, desktop && styles.mainColumnDesktop]}>
           {next ? (
             <Card
               tone="coral"
@@ -159,7 +159,7 @@ export function DashboardScreen() {
             />
           )}
         </View>
-        <View style={styles.mainColumn}>
+        <View style={[styles.mainColumn, desktop && styles.mainColumnDesktop]}>
           <Card
             tone="purple"
             style={[styles.dashboardCard, desktop && styles.equalCard]}
@@ -190,32 +190,45 @@ export function DashboardScreen() {
         </View>
       </View>
 
+      <View style={styles.sectionHeading}>
+        <View style={styles.sectionIcon}>
+          <Ionicons name="flash-outline" size={17} color={colors.coral} />
+        </View>
+        <View>
+          <Text style={styles.sectionTitle}>Quick actions</Text>
+          <Text style={styles.sectionDescription}>
+            Jump back into your work
+          </Text>
+        </View>
+      </View>
       <View style={[styles.actions, phone && styles.actionsPhone]}>
-        <View style={styles.action}>
-          <Button
-            title="View schedule"
-            onPress={() =>
-              router.push(
-                profile?.role === "teacher"
-                  ? "/(teacher)/schedule"
-                  : "/(student)/schedule",
-              )
-            }
-          />
-        </View>
-        <View style={styles.action}>
-          <Button
-            title="Open chat"
-            variant="secondary"
-            onPress={() =>
-              router.push(
-                profile?.role === "teacher"
-                  ? "/(teacher)/chat"
-                  : "/(student)/chat",
-              )
-            }
-          />
-        </View>
+        <ActionTile
+          style={!phone && styles.action}
+          icon="calendar-outline"
+          title="View schedule"
+          description="See upcoming lessons and changes"
+          onPress={() =>
+            router.push(
+              profile?.role === "teacher"
+                ? "/(teacher)/schedule"
+                : "/(student)/schedule",
+            )
+          }
+        />
+        <ActionTile
+          style={!phone && styles.action}
+          icon="chatbubbles-outline"
+          title="Open chat"
+          description="Continue the conversation"
+          tone="warm"
+          onPress={() =>
+            router.push(
+              profile?.role === "teacher"
+                ? "/(teacher)/chat"
+                : "/(student)/chat",
+            )
+          }
+        />
       </View>
     </ScreenContainer>
   );
@@ -269,9 +282,14 @@ const styles = StyleSheet.create({
   statNumber: { fontSize: 21, fontWeight: "900", color: colors.ink },
   statNumberDesktop: { fontSize: 29 },
   statLabel: { color: colors.muted, fontSize: 12, fontWeight: "700" },
-  mainGrid: { gap: 20 },
-  mainGridDesktop: { flexDirection: "row", alignItems: "stretch" },
-  mainColumn: { flex: 1, minWidth: 0 },
+  mainGrid: { gap: spacing.md },
+  mainGridDesktop: {
+    flexDirection: "row",
+    alignItems: "stretch",
+    gap: spacing.lg,
+  },
+  mainColumn: { minWidth: 0 },
+  mainColumnDesktop: { flex: 1 },
   dashboardCard: { padding: 20 },
   equalCard: { flex: 1 },
   cardHeading: { flexDirection: "row", alignItems: "center", gap: 8 },
@@ -306,6 +324,17 @@ const styles = StyleSheet.create({
   },
   groupBody: { flex: 1 },
   group: { fontSize: 15, fontWeight: "700", color: colors.ink },
+  sectionHeading: { flexDirection: "row", alignItems: "center", gap: 10 },
+  sectionIcon: {
+    width: 34,
+    height: 34,
+    borderRadius: 11,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.coralSoft,
+  },
+  sectionTitle: { color: colors.ink, fontSize: 16, fontWeight: "800" },
+  sectionDescription: { color: colors.muted, fontSize: 12, lineHeight: 17 },
   actions: { flexDirection: "row", gap: 12 },
   actionsPhone: { flexDirection: "column" },
   action: { flex: 1 },
