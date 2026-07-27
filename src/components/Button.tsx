@@ -6,11 +6,13 @@ import {
   useWindowDimensions,
   type PressableProps,
 } from "react-native";
-import { colors } from "@/lib/theme";
+import { colors, radii, shadows } from "@/lib/theme";
 export function Button({
   title,
   loading = false,
   variant = "primary",
+  style,
+  disabled,
   ...props
 }: PressableProps & {
   title: string;
@@ -22,18 +24,20 @@ export function Button({
   return (
     <Pressable
       accessibilityRole="button"
-      style={({ pressed }) => [
+      disabled={disabled}
+      style={(state) => [
         styles.base,
         desktop && styles.baseDesktop,
         styles[variant],
-        pressed && styles.pressed,
-        props.disabled && styles.disabled,
+        state.pressed && styles.pressed,
+        disabled && styles.disabled,
+        typeof style === "function" ? style(state) : style,
       ]}
       {...props}
     >
       {loading ? (
         <ActivityIndicator
-          color={variant === "secondary" ? colors.primary : "#fff"}
+          color={variant === "secondary" ? colors.primary : colors.white}
         />
       ) : (
         <Text
@@ -51,23 +55,29 @@ export function Button({
 }
 const styles = StyleSheet.create({
   base: {
-    minHeight: 44,
-    borderRadius: 14,
+    minHeight: 48,
+    borderRadius: radii.md,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 16,
-    shadowColor: "#352A82",
-    shadowOpacity: 0.16,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 5 },
-    elevation: 3,
+    ...shadows.button,
   },
-  baseDesktop: { minHeight: 56 },
+  baseDesktop: { minHeight: 52 },
   primary: { backgroundColor: colors.primary },
   danger: { backgroundColor: colors.danger },
-  secondary: { backgroundColor: colors.primarySoft, shadowOpacity: 0 },
-  text: { color: "#fff", fontSize: 14, fontWeight: "800", letterSpacing: 0.2 },
-  textDesktop: { fontSize: 17 },
+  secondary: {
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.primaryBorder,
+    shadowOpacity: 0,
+  },
+  text: {
+    color: colors.white,
+    fontSize: 15,
+    fontWeight: "800",
+    letterSpacing: 0.1,
+  },
+  textDesktop: { fontSize: 16 },
   secondaryText: { color: colors.primaryDark },
   pressed: { opacity: 0.82, transform: [{ scale: 0.985 }] },
   disabled: { opacity: 0.5 },

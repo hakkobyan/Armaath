@@ -4,8 +4,9 @@ import { Controller, useForm } from "react-hook-form";
 import { StyleSheet, Text, View } from "react-native";
 import { z } from "zod";
 import { Button } from "@/components/Button";
+import { AuthShell } from "@/components/AuthShell";
 import { Input } from "@/components/Input";
-import { ScreenContainer } from "@/components/ScreenContainer";
+import { colors } from "@/lib/theme";
 import { signUpStudent } from "@/services/auth.service";
 import { registrationSchema } from "@/utils/validation";
 
@@ -50,27 +51,25 @@ export default function Register() {
   };
   if (success)
     return (
-      <ScreenContainer contentContainerStyle={styles.center}>
-        <Text style={styles.title}>Check your email</Text>
-        <Text style={styles.message}>
-          We sent a confirmation link to your email. Confirm the address, then
-          return and log in.
-        </Text>
+      <AuthShell
+        eyebrow="ONE MORE STEP"
+        title="Check your email"
+        description="We sent a confirmation link to your email. Confirm the address, then return and log in."
+        icon="mail-open-outline"
+      >
         <Button
           title="Back to login"
           onPress={() => router.replace("/(auth)/login")}
         />
-      </ScreenContainer>
+      </AuthShell>
     );
   return (
-    <ScreenContainer contentContainerStyle={styles.container}>
-      <View style={styles.heading}>
-        <Text style={styles.kicker}>STUDENT REGISTRATION</Text>
-        <Text style={styles.title}>Create account</Text>
-        <Text style={styles.message}>
-          Student accounts are created with the student role automatically.
-        </Text>
-      </View>
+    <AuthShell
+      eyebrow="STUDENT REGISTRATION"
+      title="Create your account"
+      description="Join your class, follow lessons, and collaborate with your group."
+      icon="person-add-outline"
+    >
       <View style={styles.form}>
         <Controller
           control={control}
@@ -162,28 +161,10 @@ export default function Register() {
           onPress={() => router.back()}
         />
       </View>
-    </ScreenContainer>
+    </AuthShell>
   );
 }
 const styles = StyleSheet.create({
-  container: { width: "100%", maxWidth: 560, alignSelf: "center" },
-  center: {
-    width: "100%",
-    maxWidth: 560,
-    alignSelf: "center",
-    justifyContent: "center",
-    padding: 28,
-    gap: 20,
-  },
-  heading: { gap: 8 },
-  kicker: {
-    fontSize: 13,
-    letterSpacing: 2,
-    color: "#5b4cf0",
-    fontWeight: "800",
-  },
-  title: { fontSize: 30, fontWeight: "800", color: "#171721" },
-  message: { fontSize: 16, lineHeight: 23, color: "#686879" },
   form: { gap: 16 },
-  error: { color: "#b42336", textAlign: "center" },
+  error: { color: colors.danger, textAlign: "center", fontWeight: "600" },
 });

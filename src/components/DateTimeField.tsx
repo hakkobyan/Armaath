@@ -10,6 +10,7 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
+import { colors, radii } from "@/lib/theme";
 import { formatDate, formatTime } from "@/utils/date";
 
 type PickerMode = "date" | "time";
@@ -57,7 +58,10 @@ export function DateTimeField({
           value: toLocalInput(value),
           onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
             onChange(new Date(event.target.value).toISOString()),
-          style: { ...webInputStyle, ...(desktop ? webInputDesktopStyle : {}) },
+          style: {
+            ...webInputStyle,
+            ...(desktop ? webInputDesktopStyle : {}),
+          },
         })}
         {error ? <Text style={styles.error}>{error}</Text> : null}
       </View>
@@ -96,8 +100,8 @@ export function DateTimeField({
             display={Platform.OS === "ios" ? "spinner" : "default"}
             minuteInterval={5}
             themeVariant={Platform.OS === "ios" ? "light" : undefined}
-            textColor={Platform.OS === "ios" ? "#172033" : undefined}
-            accentColor="#6757E8"
+            textColor={Platform.OS === "ios" ? colors.ink : undefined}
+            accentColor={colors.primary}
             onChange={handleNativeChange}
           />
           {Platform.OS === "ios" ? (
@@ -115,12 +119,12 @@ export function DateTimeField({
 const webInputStyle: React.CSSProperties = {
   width: "100%",
   minHeight: 46,
-  border: "1px solid #d8d7e1",
-  borderRadius: 12,
+  border: `1px solid ${colors.border}`,
+  borderRadius: radii.md,
   padding: "0 12px",
   fontSize: 15,
-  color: "#171721",
-  backgroundColor: "#fff",
+  color: colors.ink,
+  backgroundColor: colors.surface,
   boxSizing: "border-box",
 };
 const webInputDesktopStyle: React.CSSProperties = {
@@ -130,28 +134,34 @@ const webInputDesktopStyle: React.CSSProperties = {
 };
 const styles = StyleSheet.create({
   wrap: { gap: 5 },
-  label: { fontSize: 13, fontWeight: "700", color: "#262638" },
+  label: { fontSize: 14, fontWeight: "700", color: colors.inkSoft },
   labelDesktop: { fontSize: 16 },
   row: { flexDirection: "row", gap: 8 },
   control: {
     flex: 1,
     minHeight: 52,
     borderWidth: 1,
-    borderColor: "#d8d7e1",
-    borderRadius: 12,
+    borderColor: colors.border,
+    borderRadius: radii.md,
     paddingHorizontal: 12,
     justifyContent: "center",
-    backgroundColor: "#fff",
+    backgroundColor: colors.surface,
   },
   controlHint: {
     fontSize: 10,
     fontWeight: "800",
     letterSpacing: 1,
-    color: "#7164e8",
+    color: colors.primary,
   },
-  controlValue: { fontSize: 15, fontWeight: "600", color: "#171721" },
-  picker: { borderRadius: 12, overflow: "hidden", backgroundColor: "#fff" },
+  controlValue: { fontSize: 15, fontWeight: "600", color: colors.ink },
+  picker: {
+    borderRadius: radii.md,
+    overflow: "hidden",
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
   done: { alignSelf: "flex-end", padding: 12 },
-  doneText: { color: "#5142da", fontSize: 16, fontWeight: "800" },
-  error: { color: "#b42336", fontSize: 14 },
+  doneText: { color: colors.primaryDark, fontSize: 16, fontWeight: "800" },
+  error: { color: colors.danger, fontSize: 14 },
 });

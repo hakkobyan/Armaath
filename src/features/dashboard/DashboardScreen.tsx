@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 import { EmptyState } from "@/components/EmptyState";
+import { PageHeader } from "@/components/PageHeader";
 import { ScreenContainer } from "@/components/ScreenContainer";
 import { useAuth } from "@/hooks/useAuth";
 import { useAvatarUrl } from "@/hooks/useAvatarUrl";
@@ -45,74 +46,83 @@ export function DashboardScreen() {
         new Date(item.starts_at) > new Date() && item.status !== "cancelled",
     ) ?? [];
   const next = upcoming[0];
+
   return (
     <ScreenContainer>
-      <View style={styles.header}>
-        <View>
-          <Text style={[styles.kicker, desktop && styles.kickerDesktop]}>
-            {profile?.role === "teacher" ? "TEACHER SPACE" : "STUDENT SPACE"}
-          </Text>
-          <Text style={[styles.title, desktop && styles.titleDesktop]}>
-            Hi, {profile?.first_name} 👋
-          </Text>
-          <Text style={[styles.muted, desktop && styles.mutedDesktop]}>
-            Ready to build something great?
-          </Text>
-        </View>
-        <View style={[styles.avatar, desktop && styles.avatarDesktop]}>
-          {avatar.data ? (
-            <Image
-              source={{ uri: avatar.data }}
-              style={styles.avatarImage}
-              resizeMode="cover"
-              accessibilityLabel="Profile photo"
-            />
-          ) : (
-            <Text
-              style={[styles.avatarText, desktop && styles.avatarTextDesktop]}
-            >
-              {profile?.first_name?.[0]}
-              {profile?.last_name?.[0]}
-            </Text>
-          )}
-        </View>
-      </View>
+      <PageHeader
+        stackOnPhone={false}
+        variant="hero"
+        eyebrow={
+          profile?.role === "teacher" ? "TEACHER SPACE" : "STUDENT SPACE"
+        }
+        title={`Hi, ${profile?.first_name ?? "there"}`}
+        description="Your groups, lessons, and conversations — all in one place."
+        action={
+          <View style={[styles.avatar, desktop && styles.avatarDesktop]}>
+            {avatar.data ? (
+              <Image
+                source={{ uri: avatar.data }}
+                style={styles.avatarImage}
+                resizeMode="cover"
+                accessibilityLabel="Profile photo"
+              />
+            ) : (
+              <Text
+                style={[styles.avatarText, desktop && styles.avatarTextDesktop]}
+              >
+                {profile?.first_name?.[0]}
+                {profile?.last_name?.[0]}
+              </Text>
+            )}
+          </View>
+        }
+      />
+
       <View style={styles.stats}>
         <View style={[styles.stat, styles.purple]}>
-          <Ionicons
-            name="people-outline"
-            size={desktop ? 22 : 18}
-            color={colors.primary}
-          />
-          <Text
-            style={[styles.statNumber, desktop && styles.statNumberDesktop]}
-          >
-            {ids.length}
-          </Text>
-          <Text style={styles.statLabel}>Groups</Text>
+          <View style={[styles.statIcon, styles.statIconPrimary]}>
+            <Ionicons
+              name="people-outline"
+              size={desktop ? 22 : 18}
+              color={colors.primary}
+            />
+          </View>
+          <View style={styles.statCopy}>
+            <Text
+              style={[styles.statNumber, desktop && styles.statNumberDesktop]}
+            >
+              {ids.length}
+            </Text>
+            <Text style={styles.statLabel}>Groups</Text>
+          </View>
         </View>
         <View style={[styles.stat, styles.mint]}>
-          <Ionicons
-            name={
-              profile?.role === "teacher"
-                ? "person-outline"
-                : "calendar-outline"
-            }
-            size={desktop ? 22 : 18}
-            color={colors.mint}
-          />
-          <Text
-            style={[styles.statNumber, desktop && styles.statNumberDesktop]}
-          >
-            {profile?.role === "teacher"
-              ? (students.data ?? 0)
-              : upcoming.length}
-          </Text>
-          <Text style={styles.statLabel}>
-            {profile?.role === "teacher" ? "Students" : "Upcoming"}
-          </Text>
+          <View style={[styles.statIcon, styles.statIconSecondary]}>
+            <Ionicons
+              name={
+                profile?.role === "teacher"
+                  ? "person-outline"
+                  : "calendar-outline"
+              }
+              size={desktop ? 22 : 18}
+              color={colors.mintDark}
+            />
+          </View>
+          <View style={styles.statCopy}>
+            <Text
+              style={[styles.statNumber, desktop && styles.statNumberDesktop]}
+            >
+              {profile?.role === "teacher"
+                ? (students.data ?? 0)
+                : upcoming.length}
+            </Text>
+            <Text style={styles.statLabel}>
+              {profile?.role === "teacher" ? "Students" : "Upcoming"}
+            </Text>
+          </View>
         </View>
       </View>
+
       <View style={[styles.mainGrid, desktop && styles.mainGridDesktop]}>
         <View style={styles.mainColumn}>
           {next ? (
@@ -143,6 +153,7 @@ export function DashboardScreen() {
           ) : (
             <EmptyState
               style={[styles.dashboardCard, desktop && styles.equalCard]}
+              icon="calendar-clear-outline"
               title="No upcoming lessons"
               message="Your next scheduled lesson will appear here."
             />
@@ -178,6 +189,7 @@ export function DashboardScreen() {
           </Card>
         </View>
       </View>
+
       <View style={[styles.actions, phone && styles.actionsPhone]}>
         <View style={styles.action}>
           <Button
@@ -210,40 +222,50 @@ export function DashboardScreen() {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    gap: 12,
-  },
-  kicker: {
-    fontSize: 10,
-    letterSpacing: 1.7,
-    color: colors.primary,
-    fontWeight: "900",
-  },
-  kickerDesktop: { fontSize: 13, letterSpacing: 2 },
-  title: { fontSize: 26, fontWeight: "900", color: colors.ink, marginTop: 3 },
-  titleDesktop: { fontSize: 36 },
   muted: { color: colors.muted, fontSize: 13, lineHeight: 18 },
-  mutedDesktop: { fontSize: 16, lineHeight: 23 },
   avatar: {
     width: 44,
     height: 44,
     borderRadius: 15,
-    backgroundColor: colors.primary,
+    backgroundColor: colors.white,
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
+    borderWidth: 2,
+    borderColor: colors.white,
   },
   avatarImage: { width: "100%", height: "100%" },
   avatarDesktop: { width: 52, height: 52, borderRadius: 18 },
-  avatarText: { color: "#fff", fontSize: 16, fontWeight: "900" },
+  avatarText: { color: colors.primaryDeep, fontSize: 16, fontWeight: "900" },
   avatarTextDesktop: { fontSize: 19 },
   stats: { flexDirection: "row", gap: 12 },
-  stat: { flex: 1, borderRadius: 18, padding: 15, gap: 3 },
-  purple: { backgroundColor: colors.primarySoft },
-  mint: { backgroundColor: colors.mintSoft },
+  stat: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    borderRadius: 20,
+    padding: 16,
+    gap: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    shadowColor: colors.ink,
+    shadowOpacity: 0.04,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 5 },
+  },
+  purple: { borderTopWidth: 3, borderTopColor: colors.primary },
+  mint: { borderTopWidth: 3, borderTopColor: colors.mint },
+  statIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  statIconPrimary: { backgroundColor: colors.primarySoft },
+  statIconSecondary: { backgroundColor: colors.mintSoft },
+  statCopy: { gap: 1 },
   statNumber: { fontSize: 21, fontWeight: "900", color: colors.ink },
   statNumberDesktop: { fontSize: 29 },
   statLabel: { color: colors.muted, fontSize: 12, fontWeight: "700" },
@@ -257,7 +279,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: "#fff",
+    backgroundColor: colors.white,
     alignItems: "center",
     justifyContent: "center",
   },

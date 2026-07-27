@@ -19,6 +19,7 @@ import {
 } from "react-native";
 import { Button } from "@/components/Button";
 import { EmptyState } from "@/components/EmptyState";
+import { PageHeader } from "@/components/PageHeader";
 import { useAuth } from "@/hooks/useAuth";
 import { useCurrentGroup } from "@/hooks/useCurrentGroup";
 import { supabase } from "@/lib/supabase";
@@ -165,10 +166,11 @@ export function ChatScreen() {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <View style={[styles.header, desktop && styles.headerDesktop]}>
-        <Text style={styles.kicker}>ARMATH COMMUNITY</Text>
-        <Text style={[styles.title, desktop && styles.titleDesktop]}>
-          Chats
-        </Text>
+        <PageHeader
+          eyebrow="ARMATH COMMUNITY"
+          title="Chats"
+          description="Share ideas, files, and updates with your learning community."
+        />
       </View>
       <ScrollView
         horizontal
@@ -183,7 +185,7 @@ export function ChatScreen() {
           <Ionicons
             name="globe-outline"
             size={17}
-            color={selected === "global" ? colors.primary : "#667085"}
+            color={selected === "global" ? colors.primary : colors.muted}
           />
           <Text
             style={[
@@ -204,7 +206,7 @@ export function ChatScreen() {
             <Ionicons
               name="people-outline"
               size={17}
-              color={selected === group.id ? colors.primary : "#667085"}
+              color={selected === group.id ? colors.primary : colors.muted}
             />
             <Text
               style={[
@@ -221,6 +223,7 @@ export function ChatScreen() {
       {room.isError || (room.isFetched && !room.data) ? (
         <View style={styles.emptyChat}>
           <EmptyState
+            icon="chatbubble-ellipses-outline"
             title="Chat is not ready"
             message="Apply migration 005_chat_and_delete_permissions.sql in Supabase."
           />
@@ -234,6 +237,7 @@ export function ChatScreen() {
           contentContainerStyle={[styles.list, desktop && styles.listDesktop]}
           ListEmptyComponent={
             <EmptyState
+              icon="chatbubbles-outline"
               title="Start the conversation"
               message={
                 selected === "global"
@@ -258,12 +262,14 @@ export function ChatScreen() {
                   mine && styles.mine,
                 ]}
               >
-                <Text style={styles.sender}>
+                <Text style={[styles.sender, mine && styles.mineMeta]}>
                   {item.profiles?.first_name ?? "Member"} ·{" "}
                   {formatTime(item.created_at)}
                 </Text>
                 {item.is_deleted ? (
-                  <Text style={styles.deleted}>Message deleted</Text>
+                  <Text style={[styles.deleted, mine && styles.mineMeta]}>
+                    Message deleted
+                  </Text>
                 ) : (
                   <>
                     {item.content ? (
@@ -271,6 +277,7 @@ export function ChatScreen() {
                         style={[
                           styles.content,
                           desktop && styles.contentDesktop,
+                          mine && styles.mineContent,
                         ]}
                       >
                         {item.content}
@@ -321,7 +328,9 @@ export function ChatScreen() {
                 )}
                 {!item.is_deleted && (mine || profile?.role === "teacher") ? (
                   <Pressable onPress={() => confirmMessageDelete(item.id)}>
-                    <Text style={styles.delete}>Delete</Text>
+                    <Text style={[styles.delete, mine && styles.mineDelete]}>
+                      Delete
+                    </Text>
                   </Pressable>
                 ) : null}
               </View>
@@ -384,7 +393,7 @@ export function ChatScreen() {
             value={text}
             onChangeText={setText}
             placeholder="Write a message…"
-            placeholderTextColor="#98A2B3"
+            placeholderTextColor={colors.subtle}
             maxLength={2000}
             multiline
           />
@@ -400,9 +409,9 @@ export function ChatScreen() {
               onPress={() => send.mutate()}
             >
               {send.isPending ? (
-                <ActivityIndicator color="#fff" size="small" />
+                <ActivityIndicator color={colors.white} size="small" />
               ) : (
-                <Ionicons name="arrow-up" size={22} color="#fff" />
+                <Ionicons name="arrow-up" size={22} color={colors.white} />
               )}
             </Pressable>
           ) : (
@@ -434,19 +443,11 @@ const styles = StyleSheet.create({
     width: "100%",
     minHeight: 0,
     paddingTop: 14,
-    backgroundColor: "#F7F8FC",
+    backgroundColor: colors.background,
   },
   rootDesktop: { paddingTop: 32 },
   header: { paddingHorizontal: 12 },
   headerDesktop: { paddingHorizontal: 20 },
-  kicker: {
-    fontSize: 10,
-    letterSpacing: 1.7,
-    color: colors.primary,
-    fontWeight: "900",
-  },
-  title: { fontSize: 27, fontWeight: "900", color: colors.ink, marginTop: 2 },
-  titleDesktop: { fontSize: 36 },
   roomScroller: { flexGrow: 0 },
   rooms: { flexDirection: "row", gap: 7, padding: 12 },
   roomsDesktop: { gap: 8, padding: 16 },
@@ -455,13 +456,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 5,
     paddingHorizontal: 10,
-    paddingVertical: 7,
+    minHeight: 44,
+    paddingVertical: 8,
     borderRadius: 22,
-    backgroundColor: "#fff",
+    backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
   },
-  chipSelected: { backgroundColor: colors.primarySoft, borderColor: "#CFC7FF" },
+  chipSelected: {
+    backgroundColor: colors.primarySoft,
+    borderColor: colors.primaryBorder,
+  },
   chipText: { fontSize: 12, fontWeight: "700", color: colors.muted },
   chipTextDesktop: { fontSize: 16 },
   chipTextSelected: { color: colors.primaryDark },
@@ -480,9 +485,11 @@ const styles = StyleSheet.create({
     padding: 11,
     borderRadius: 16,
     borderBottomLeftRadius: 5,
-    backgroundColor: "#fff",
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
     gap: 6,
-    shadowColor: "#25304A",
+    shadowColor: colors.ink,
     shadowOpacity: 0.05,
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 3 },
@@ -490,20 +497,24 @@ const styles = StyleSheet.create({
   attachmentMessage: { maxWidth: "92%" },
   mine: {
     alignSelf: "flex-end",
-    backgroundColor: colors.primarySoft,
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
     borderBottomLeftRadius: 18,
     borderBottomRightRadius: 5,
   },
   sender: { fontSize: 12, color: colors.muted, fontWeight: "700" },
   content: { fontSize: 14, lineHeight: 20, color: colors.ink },
   contentDesktop: { fontSize: 17, lineHeight: 24 },
+  mineContent: { color: colors.white },
+  mineMeta: { color: colors.onPrimaryMuted },
+  mineDelete: { color: colors.white },
   deleted: { fontStyle: "italic", color: colors.muted },
   delete: { fontSize: 14, color: colors.danger, fontWeight: "700" },
   image: {
     width: "100%",
     aspectRatio: 1.6,
     borderRadius: 13,
-    backgroundColor: "#E4E7EC",
+    backgroundColor: colors.surfaceMuted,
   },
   file: {
     minWidth: 220,
@@ -512,7 +523,7 @@ const styles = StyleSheet.create({
     gap: 10,
     padding: 10,
     borderRadius: 13,
-    backgroundColor: "rgba(255,255,255,.72)",
+    backgroundColor: colors.white,
   },
   fileIcon: {
     width: 40,
@@ -531,10 +542,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 7,
     gap: 6,
-    backgroundColor: "#fff",
+    backgroundColor: colors.surface,
     borderTopWidth: 1,
     borderTopColor: colors.border,
-    shadowColor: "#25304A",
+    shadowColor: colors.ink,
     shadowOpacity: 0.06,
     shadowRadius: 14,
     shadowOffset: { width: 0, height: -4 },
@@ -561,7 +572,7 @@ const styles = StyleSheet.create({
     paddingVertical: 9,
     color: colors.ink,
     fontSize: 15,
-    backgroundColor: "#FAFBFC",
+    backgroundColor: colors.surfaceMuted,
   },
   sendButton: {
     width: 44,
@@ -570,7 +581,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: colors.primary,
-    shadowColor: "#352A82",
+    shadowColor: colors.primaryDark,
     shadowOpacity: 0.16,
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 4 },

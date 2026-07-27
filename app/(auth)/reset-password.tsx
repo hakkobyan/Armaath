@@ -4,10 +4,11 @@ import { Controller, useForm } from "react-hook-form";
 import { StyleSheet, Text } from "react-native";
 import { z } from "zod";
 import { Button } from "@/components/Button";
+import { AuthShell } from "@/components/AuthShell";
 import { Input } from "@/components/Input";
 import { LoadingScreen } from "@/components/LoadingScreen";
-import { ScreenContainer } from "@/components/ScreenContainer";
 import { useAuth } from "@/hooks/useAuth";
+import { colors } from "@/lib/theme";
 import { signOut, updatePassword } from "@/services/auth.service";
 import { newPasswordSchema } from "@/utils/validation";
 
@@ -42,12 +43,12 @@ export default function ResetPassword() {
   if (loading || (passwordRecovery && !session)) return <LoadingScreen />;
   if (!passwordRecovery || !session)
     return (
-      <ScreenContainer contentContainerStyle={styles.center}>
-        <Text style={styles.title}>Invalid recovery link</Text>
-        <Text style={styles.message}>
-          This link is invalid or has expired. Request a new password recovery
-          email.
-        </Text>
+      <AuthShell
+        eyebrow="LINK EXPIRED"
+        title="Invalid recovery link"
+        description="This link is invalid or has expired. Request a new password recovery email."
+        icon="alert-circle-outline"
+      >
         <Button
           title="Request new link"
           onPress={() => router.replace("/(auth)/forgot-password")}
@@ -57,15 +58,15 @@ export default function ResetPassword() {
           variant="secondary"
           onPress={() => router.replace("/(auth)/login")}
         />
-      </ScreenContainer>
+      </AuthShell>
     );
   return (
-    <ScreenContainer contentContainerStyle={styles.center}>
-      <Text style={styles.kicker}>ACCOUNT RECOVERY</Text>
-      <Text style={styles.title}>Choose a new password</Text>
-      <Text style={styles.message}>
-        Use at least 6 characters and do not reuse an old password.
-      </Text>
+    <AuthShell
+      eyebrow="ACCOUNT RECOVERY"
+      title="Choose a new password"
+      description="Use at least 6 characters and do not reuse an old password."
+      icon="lock-closed-outline"
+    >
       <Controller
         control={control}
         name="password"
@@ -105,26 +106,10 @@ export default function ResetPassword() {
         disabled={isSubmitting}
         onPress={handleSubmit(submit)}
       />
-    </ScreenContainer>
+    </AuthShell>
   );
 }
 
 const styles = StyleSheet.create({
-  center: {
-    width: "100%",
-    maxWidth: 560,
-    alignSelf: "center",
-    justifyContent: "center",
-    padding: 28,
-    gap: 18,
-  },
-  kicker: {
-    fontSize: 13,
-    letterSpacing: 2,
-    color: "#5b4cf0",
-    fontWeight: "800",
-  },
-  title: { fontSize: 30, fontWeight: "800", color: "#171721" },
-  message: { fontSize: 16, lineHeight: 23, color: "#686879" },
-  error: { color: "#b42336", textAlign: "center" },
+  error: { color: colors.danger, textAlign: "center", fontWeight: "600" },
 });

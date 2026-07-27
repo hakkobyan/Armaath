@@ -1,1 +1,13 @@
-import{Redirect}from'expo-router';import{LoadingScreen}from'@/components/LoadingScreen';import{useAuth}from'@/hooks/useAuth';export default function Index(){const{session,profile,loading}=useAuth();if(loading)return <LoadingScreen/>;if(!session||!profile)return <Redirect href="/(auth)/login"/>;return <Redirect href={profile.role==='student'?"/(student)/home":"/(teacher)/home"}/>}
+import { Redirect } from "expo-router";
+import { LoadingScreen } from "@/components/LoadingScreen";
+import { useAuth } from "@/hooks/useAuth";
+export default function Index() {
+  const { session, profile, loading } = useAuth();
+  if (loading) return <LoadingScreen />;
+  if (!session || !profile) return <Redirect href="/(auth)/login" />;
+  return (
+    <Redirect
+      href={profile.role === "student" ? "/(student)/home" : "/(teacher)/home"}
+    />
+  );
+}

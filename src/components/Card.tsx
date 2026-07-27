@@ -6,7 +6,7 @@ import {
   View,
   type ViewStyle,
 } from "react-native";
-import { colors } from "@/lib/theme";
+import { colors, radii, shadows, spacing } from "@/lib/theme";
 export function Card({
   children,
   tone = "default",
@@ -32,20 +32,19 @@ export function Card({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.surface,
-    borderRadius: 20,
-    padding: 16,
-    gap: 9,
+    borderRadius: radii.lg,
+    padding: spacing.md,
+    gap: spacing.sm,
     borderWidth: 1,
-    borderColor: "#ECEEF3",
-    shadowColor: "#25304A",
-    shadowOpacity: 0.07,
-    shadowRadius: 16,
-    shadowOffset: { width: 0, height: 7 },
-    elevation: 2,
+    borderColor: colors.border,
+    ...shadows.card,
   },
-  cardDesktop: { padding: 22, gap: 12 },
+  cardDesktop: { padding: spacing.lg, gap: spacing.md },
   default: {},
-  purple: { backgroundColor: colors.primarySoft, borderColor: "#DDD7FF" },
-  mint: { backgroundColor: colors.mintSoft, borderColor: "#CBEFE4" },
-  coral: { backgroundColor: colors.coralSoft, borderColor: "#FFDCD5" },
+  purple: {
+    backgroundColor: colors.primarySoft,
+    borderColor: colors.primaryBorder,
+  },
+  mint: { backgroundColor: colors.mintSoft, borderColor: colors.mintBorder },
+  coral: { backgroundColor: colors.coralSoft, borderColor: colors.coralBorder },
 });

@@ -6,7 +6,7 @@ import {
   useWindowDimensions,
   type ScrollViewProps,
 } from "react-native";
-import { colors } from "@/lib/theme";
+import { colors, spacing } from "@/lib/theme";
 export function ScreenContainer({
   children,
   contentContainerStyle,
@@ -34,16 +34,18 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.background },
   content: {
     width: "100%",
-    paddingHorizontal: 18,
-    paddingTop: 20,
-    paddingBottom: 32,
-    gap: 14,
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing.md,
+    paddingBottom: spacing.xl,
+    gap: spacing.md,
     flexGrow: 1,
   },
   contentDesktop: {
-    paddingHorizontal: 20,
-    paddingTop: 32,
-    paddingBottom: 48,
-    gap: 18,
+    maxWidth: 1320,
+    alignSelf: "center",
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.xl,
+    paddingBottom: spacing.xxl,
+    gap: spacing.lg,
   },
 });

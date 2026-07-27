@@ -21,30 +21,30 @@ export default function Layout() {
         tabBarPosition: desktop ? "left" : "bottom",
         tabBarLabelPosition: desktop ? "beside-icon" : "below-icon",
         tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: "#667085",
+        tabBarInactiveTintColor: colors.muted,
         tabBarActiveBackgroundColor: desktop
           ? colors.primarySoft
           : "transparent",
         tabBarInactiveBackgroundColor: "transparent",
         tabBarStyle: desktop
           ? {
-              width: 232,
+              width: 240,
               paddingHorizontal: 14,
               paddingTop: 28,
               paddingBottom: 28,
-              backgroundColor: "#fff",
-              borderRightColor: "#EAECF0",
+              backgroundColor: colors.surface,
+              borderRightColor: colors.border,
               borderRightWidth: 1,
-              shadowColor: "#25304A",
+              shadowColor: colors.ink,
               shadowOpacity: 0.06,
               shadowRadius: 18,
             }
           : {
-              height: 62,
-              paddingTop: 5,
-              paddingBottom: 6,
-              backgroundColor: "#fff",
-              borderTopColor: "#EAECF0",
+              height: 66,
+              paddingTop: 6,
+              paddingBottom: 7,
+              backgroundColor: colors.surface,
+              borderTopColor: colors.border,
             },
         tabBarItemStyle: desktop
           ? {
@@ -54,7 +54,7 @@ export default function Layout() {
               outlineWidth: 0,
             }
           : {},
-        tabBarLabelStyle: { fontSize: desktop ? 16 : 10, fontWeight: "700" },
+        tabBarLabelStyle: { fontSize: desktop ? 16 : 11, fontWeight: "700" },
       }}
     >
       <Tabs.Screen

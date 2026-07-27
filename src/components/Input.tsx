@@ -7,7 +7,7 @@ import {
   View,
   type TextInputProps,
 } from "react-native";
-import { colors } from "@/lib/theme";
+import { colors, radii } from "@/lib/theme";
 export const Input = forwardRef<
   TextInput,
   TextInputProps & { label: string; error?: string }
@@ -26,7 +26,7 @@ export const Input = forwardRef<
           desktop && styles.inputDesktop,
           error && styles.invalid,
         ]}
-        placeholderTextColor="#8a8a9b"
+        placeholderTextColor={colors.subtle}
         {...props}
       />
       {error ? (
@@ -39,25 +39,21 @@ export const Input = forwardRef<
 });
 Input.displayName = "Input";
 const styles = StyleSheet.create({
-  wrap: { gap: 5 },
-  label: { fontSize: 13, fontWeight: "700", color: colors.ink },
-  labelDesktop: { fontSize: 16 },
+  wrap: { gap: 7 },
+  label: { fontSize: 14, fontWeight: "700", color: colors.inkSoft },
+  labelDesktop: { fontSize: 15 },
   input: {
-    minHeight: 46,
+    minHeight: 50,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 14,
+    borderRadius: radii.md,
     paddingHorizontal: 14,
-    fontSize: 15,
+    fontSize: 16,
     color: colors.ink,
     backgroundColor: colors.surface,
-    shadowColor: "#25304A",
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 3 },
   },
-  inputDesktop: { minHeight: 56, fontSize: 17 },
-  invalid: { borderColor: colors.danger, backgroundColor: "#FFF8F8" },
+  inputDesktop: { minHeight: 52, fontSize: 16 },
+  invalid: { borderColor: colors.danger, backgroundColor: colors.dangerSoft },
   error: { color: colors.danger, fontSize: 13, fontWeight: "600" },
   errorDesktop: { fontSize: 14 },
 });

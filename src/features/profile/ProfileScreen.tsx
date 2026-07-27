@@ -14,6 +14,7 @@ import { z } from "zod";
 import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 import { Input } from "@/components/Input";
+import { PageHeader } from "@/components/PageHeader";
 import { ScreenContainer } from "@/components/ScreenContainer";
 import { useAuth } from "@/hooks/useAuth";
 import { useAvatarUrl } from "@/hooks/useAvatarUrl";
@@ -43,6 +44,7 @@ function accountError(error: unknown) {
 export function ProfileScreen() {
   const { width } = useWindowDimensions();
   const desktop = width >= 900;
+  const phone = width < 520;
   const { profile, session, reload } = useAuth();
   const groups = useCurrentGroup();
   const avatar = useAvatarUrl(profile?.avatar_url);
@@ -129,15 +131,11 @@ export function ProfileScreen() {
 
   return (
     <ScreenContainer contentContainerStyle={styles.container}>
-      <View style={styles.pageHeader}>
-        <Text style={styles.kicker}>ACCOUNT</Text>
-        <Text style={[styles.title, desktop && styles.titleDesktop]}>
-          Profile settings
-        </Text>
-        <Text style={[styles.muted, desktop && styles.mutedDesktop]}>
-          Manage your personal details and profile photo.
-        </Text>
-      </View>
+      <PageHeader
+        eyebrow="ACCOUNT"
+        title="Profile settings"
+        description="Manage your personal details and profile photo."
+      />
 
       <View style={[styles.grid, desktop && styles.gridDesktop]}>
         <View style={[styles.sidebar, desktop && styles.sidebarDesktop]}>
@@ -164,7 +162,11 @@ export function ProfileScreen() {
                 ]}
                 onPress={() => void choosePhoto()}
               >
-                <Ionicons name="camera-outline" size={21} color="#fff" />
+                <Ionicons
+                  name="camera-outline"
+                  size={21}
+                  color={colors.white}
+                />
               </Pressable>
             </View>
             <Text style={styles.name}>
@@ -330,7 +332,7 @@ export function ProfileScreen() {
               <Ionicons
                 name="checkmark-circle-outline"
                 size={20}
-                color="#187A65"
+                color={colors.success}
               />
               <Text style={styles.success}>{notice}</Text>
             </View>
@@ -344,7 +346,7 @@ export function ProfileScreen() {
         </Card>
       </View>
 
-      <Card style={styles.sessionCard}>
+      <Card style={[styles.sessionCard, phone && styles.sessionCardPhone]}>
         <View style={styles.sessionCopy}>
           <Text style={styles.heading}>Session</Text>
           <Text style={styles.muted}>Sign out of this device securely.</Text>
@@ -363,17 +365,7 @@ export function ProfileScreen() {
 
 const styles = StyleSheet.create({
   container: { width: "100%", maxWidth: 1080, alignSelf: "center" },
-  pageHeader: { gap: 4, marginBottom: 4 },
-  kicker: {
-    color: colors.primary,
-    fontSize: 11,
-    fontWeight: "900",
-    letterSpacing: 1.7,
-  },
-  title: { color: colors.ink, fontSize: 27, fontWeight: "900" },
-  titleDesktop: { fontSize: 36 },
   muted: { color: colors.muted, fontSize: 13, lineHeight: 19 },
-  mutedDesktop: { fontSize: 15, lineHeight: 22 },
   grid: { gap: 14 },
   gridDesktop: { flexDirection: "row", alignItems: "flex-start", gap: 20 },
   sidebar: { gap: 14 },
@@ -392,7 +384,7 @@ const styles = StyleSheet.create({
     borderColor: colors.primarySoft,
   },
   avatarImage: { width: "100%", height: "100%" },
-  initials: { color: "#fff", fontSize: 28, fontWeight: "900" },
+  initials: { color: colors.white, fontSize: 28, fontWeight: "900" },
   cameraButton: {
     position: "absolute",
     right: -3,
@@ -462,10 +454,10 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 13,
   },
-  feedbackError: { backgroundColor: "#FFF0F2" },
+  feedbackError: { backgroundColor: colors.dangerSoft },
   feedbackSuccess: { backgroundColor: colors.mintSoft },
   error: { flex: 1, color: colors.danger, fontSize: 13, lineHeight: 19 },
-  success: { flex: 1, color: "#187A65", fontSize: 13, lineHeight: 19 },
+  success: { flex: 1, color: colors.success, fontSize: 13, lineHeight: 19 },
   sessionCard: {
     flexDirection: "row",
     alignItems: "center",
@@ -473,5 +465,6 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   sessionCopy: { flex: 1 },
+  sessionCardPhone: { alignItems: "stretch", flexDirection: "column" },
   logoutButton: { minWidth: 120 },
 });

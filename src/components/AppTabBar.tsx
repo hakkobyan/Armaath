@@ -11,7 +11,7 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import { colors } from "@/lib/theme";
+import { colors, radii, shadows } from "@/lib/theme";
 
 export function AppTabBar(props: BottomTabBarProps) {
   const { width } = useWindowDimensions();
@@ -40,7 +40,7 @@ export function AppTabBar(props: BottomTabBarProps) {
           <Ionicons
             name={collapsed ? "chevron-forward" : "chevron-back"}
             size={22}
-            color={colors.primary}
+            color={colors.onPrimaryMuted}
           />
         </Pressable>
       </View>
@@ -50,7 +50,7 @@ export function AppTabBar(props: BottomTabBarProps) {
           const focused = props.state.index === index;
           const options = props.descriptors[route.key].options;
           const label = options.title ?? route.name;
-          const color = focused ? colors.primary : colors.muted;
+          const color = focused ? colors.primary : colors.onPrimaryMuted;
           const icon = options.tabBarIcon?.({ focused, color, size: 23 });
 
           return (
@@ -82,6 +82,7 @@ export function AppTabBar(props: BottomTabBarProps) {
                 })
               }
             >
+              {focused ? <View style={styles.activeIndicator} /> : null}
               <View style={styles.icon}>{icon}</View>
               {!collapsed ? (
                 <Text style={[styles.label, focused && styles.labelActive]}>
@@ -98,66 +99,76 @@ export function AppTabBar(props: BottomTabBarProps) {
 
 const styles = StyleSheet.create({
   sidebar: {
-    width: 220,
+    width: 240,
     height: "100%",
-    paddingHorizontal: 14,
-    paddingVertical: 22,
-    backgroundColor: colors.surface,
+    paddingHorizontal: 16,
+    paddingVertical: 24,
+    backgroundColor: colors.primaryDeep,
     borderRightWidth: 1,
-    borderRightColor: colors.border,
-    shadowColor: "#25304A",
-    shadowOpacity: 0.06,
-    shadowRadius: 18,
-    shadowOffset: { width: 4, height: 0 },
+    borderRightColor: colors.primary,
+    ...shadows.card,
   },
-  sidebarCollapsed: { width: 72, paddingHorizontal: 8 },
+  sidebarCollapsed: { width: 80, paddingHorizontal: 10 },
   brandRow: {
-    minHeight: 46,
+    minHeight: 48,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     gap: 8,
     paddingHorizontal: 4,
-    marginBottom: 14,
+    marginBottom: 20,
   },
   brandRowCollapsed: { justifyContent: "center", paddingHorizontal: 0 },
   brandInline: { flexDirection: "row", alignItems: "center", gap: 10 },
   brand: {
-    color: colors.ink,
-    fontSize: 16,
+    color: colors.white,
+    fontSize: 17,
     fontWeight: "900",
     letterSpacing: 1.4,
   },
   brandMark: {
-    width: 36,
-    height: 36,
-    borderRadius: 11,
+    width: 40,
+    height: 40,
+    borderRadius: radii.sm,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.primary,
+    backgroundColor: colors.white,
   },
-  brandMarkText: { color: "#fff", fontSize: 18, fontWeight: "900" },
+  brandMarkText: {
+    color: colors.primaryDeep,
+    fontSize: 19,
+    fontWeight: "900",
+  },
   collapseButton: {
-    width: 34,
-    height: 34,
-    borderRadius: 10,
+    width: 44,
+    height: 44,
+    borderRadius: radii.md,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.primarySoft,
+    backgroundColor: colors.primaryRaised,
   },
-  navigation: { gap: 4 },
+  navigation: { gap: 6 },
   item: {
-    minHeight: 50,
+    minHeight: 52,
     flexDirection: "row",
     alignItems: "center",
     gap: 13,
     paddingHorizontal: 14,
-    borderRadius: 15,
+    borderRadius: radii.md,
+    overflow: "hidden",
   },
   itemCollapsed: { justifyContent: "center", paddingHorizontal: 0 },
-  itemActive: { backgroundColor: colors.primarySoft },
+  itemActive: { backgroundColor: colors.surface },
   itemPressed: { opacity: 0.72 },
+  activeIndicator: {
+    position: "absolute",
+    left: 0,
+    width: 4,
+    height: 24,
+    borderRadius: 2,
+    backgroundColor: colors.coral,
+  },
   icon: { width: 26, alignItems: "center", justifyContent: "center" },
-  label: { color: colors.muted, fontSize: 16, fontWeight: "700" },
+  label: { color: colors.onPrimaryMuted, fontSize: 16, fontWeight: "700" },
   labelActive: { color: colors.primaryDark, fontWeight: "900" },
 });

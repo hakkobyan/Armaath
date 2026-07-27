@@ -3,11 +3,12 @@ import * as Linking from "expo-linking";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import { z } from "zod";
 import { Button } from "@/components/Button";
+import { AuthShell } from "@/components/AuthShell";
 import { Input } from "@/components/Input";
-import { ScreenContainer } from "@/components/ScreenContainer";
+import { colors } from "@/lib/theme";
 import { requestPasswordReset } from "@/services/auth.service";
 import { passwordResetRequestSchema } from "@/utils/validation";
 
@@ -43,27 +44,25 @@ export default function ForgotPassword() {
   };
   if (sent)
     return (
-      <ScreenContainer contentContainerStyle={styles.center}>
-        <Text style={styles.title}>Check your email</Text>
-        <Text style={styles.message}>
-          If an account exists for this address, you will receive a password
-          recovery link. Open it on this device.
-        </Text>
+      <AuthShell
+        eyebrow="RECOVERY EMAIL SENT"
+        title="Check your email"
+        description="If an account exists for this address, you will receive a recovery link. Open it on this device."
+        icon="mail-open-outline"
+      >
         <Button
           title="Back to login"
           onPress={() => router.replace("/(auth)/login")}
         />
-      </ScreenContainer>
+      </AuthShell>
     );
   return (
-    <ScreenContainer contentContainerStyle={styles.center}>
-      <View style={styles.heading}>
-        <Text style={styles.kicker}>ACCOUNT RECOVERY</Text>
-        <Text style={styles.title}>Reset password</Text>
-        <Text style={styles.message}>
-          Enter the email address used for your account.
-        </Text>
-      </View>
+    <AuthShell
+      eyebrow="ACCOUNT RECOVERY"
+      title="Reset password"
+      description="Enter the email address used for your account."
+      icon="key-outline"
+    >
       <Controller
         control={control}
         name="email"
@@ -95,27 +94,10 @@ export default function ForgotPassword() {
         disabled={isSubmitting}
         onPress={() => router.back()}
       />
-    </ScreenContainer>
+    </AuthShell>
   );
 }
 
 const styles = StyleSheet.create({
-  center: {
-    width: "100%",
-    maxWidth: 560,
-    alignSelf: "center",
-    justifyContent: "center",
-    padding: 28,
-    gap: 20,
-  },
-  heading: { gap: 8 },
-  kicker: {
-    fontSize: 13,
-    letterSpacing: 2,
-    color: "#5b4cf0",
-    fontWeight: "800",
-  },
-  title: { fontSize: 30, fontWeight: "800", color: "#171721" },
-  message: { fontSize: 16, lineHeight: 23, color: "#686879" },
-  error: { color: "#b42336", textAlign: "center" },
+  error: { color: colors.danger, textAlign: "center", fontWeight: "600" },
 });
