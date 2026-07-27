@@ -1,4 +1,64 @@
-import { ActivityIndicator,Pressable,StyleSheet,Text,type PressableProps } from 'react-native';
-import{colors}from'@/lib/theme';
-export function Button({title,loading=false,variant='primary',...props}:PressableProps&{title:string;loading?:boolean;variant?:'primary'|'danger'|'secondary'}){return <Pressable accessibilityRole="button" style={({pressed})=>[styles.base,styles[variant],pressed&&styles.pressed,props.disabled&&styles.disabled]} {...props}>{loading?<ActivityIndicator color={variant==='secondary'?colors.primary:'#fff'}/>:<Text style={[styles.text,variant==='secondary'&&styles.secondaryText]}>{title}</Text>}</Pressable>}
-const styles=StyleSheet.create({base:{minHeight:52,borderRadius:16,alignItems:'center',justifyContent:'center',paddingHorizontal:20,shadowColor:'#352A82',shadowOpacity:.16,shadowRadius:10,shadowOffset:{width:0,height:5},elevation:3},primary:{backgroundColor:colors.primary},danger:{backgroundColor:colors.danger},secondary:{backgroundColor:colors.primarySoft,shadowOpacity:0},text:{color:'#fff',fontSize:16,fontWeight:'800',letterSpacing:.2},secondaryText:{color:colors.primaryDark},pressed:{opacity:.82,transform:[{scale:.985}]},disabled:{opacity:.5}});
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleSheet,
+  Text,
+  type PressableProps,
+} from "react-native";
+import { colors } from "@/lib/theme";
+export function Button({
+  title,
+  loading = false,
+  variant = "primary",
+  ...props
+}: PressableProps & {
+  title: string;
+  loading?: boolean;
+  variant?: "primary" | "danger" | "secondary";
+}) {
+  return (
+    <Pressable
+      accessibilityRole="button"
+      style={({ pressed }) => [
+        styles.base,
+        styles[variant],
+        pressed && styles.pressed,
+        props.disabled && styles.disabled,
+      ]}
+      {...props}
+    >
+      {loading ? (
+        <ActivityIndicator
+          color={variant === "secondary" ? colors.primary : "#fff"}
+        />
+      ) : (
+        <Text
+          style={[styles.text, variant === "secondary" && styles.secondaryText]}
+        >
+          {title}
+        </Text>
+      )}
+    </Pressable>
+  );
+}
+const styles = StyleSheet.create({
+  base: {
+    minHeight: 56,
+    borderRadius: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 20,
+    shadowColor: "#352A82",
+    shadowOpacity: 0.16,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 5 },
+    elevation: 3,
+  },
+  primary: { backgroundColor: colors.primary },
+  danger: { backgroundColor: colors.danger },
+  secondary: { backgroundColor: colors.primarySoft, shadowOpacity: 0 },
+  text: { color: "#fff", fontSize: 17, fontWeight: "800", letterSpacing: 0.2 },
+  secondaryText: { color: colors.primaryDark },
+  pressed: { opacity: 0.82, transform: [{ scale: 0.985 }] },
+  disabled: { opacity: 0.5 },
+});
